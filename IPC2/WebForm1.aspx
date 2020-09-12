@@ -41,7 +41,7 @@
     <div id="Partidas">
         <header class="Title">Partidas</header>
         
-            <asp:Button CssClass="BotonesP" ID="Button3" runat="server" Text="Cargar Partida" />
+            <asp:Button CssClass="BotonesP" ID="Button3" runat="server" Text="Cargar Partida" OnClick="Button3_Click" />
             <br />
             
             <asp:Button CssClass="BotonesP" runat="server" Text="Historial" />

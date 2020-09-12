@@ -5,12 +5,12 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
-
+using IPC2;
 namespace IPC2
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
-
+        
         string p = "a1";
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,7 +18,11 @@ namespace IPC2
             e4.BackColor = System.Drawing.Color.Black;
             d5.BackColor = System.Drawing.Color.Black;
             e5.BackColor = System.Drawing.Color.White;
-            
+            if (WebForm1.num == 1)
+            {
+                cargar();
+                WebForm1.num = 0;
+            }
             
             
         }
@@ -990,28 +994,37 @@ namespace IPC2
                 if (c1!=null)
                 {
                     if (c1.BackColor.Name == "White") {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(a));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
 
-                    }else if (c1.BackColor.Name == "Black"){
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("A"));
+                        ficha.AppendChild(columna);
+
+                    }
+                    else if (c1.BackColor.Name == "Black"){
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(b));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("A"));
+                        ficha.AppendChild(columna);
                     }
                     
                 }
@@ -1019,60 +1032,76 @@ namespace IPC2
                 {
                     if (c2.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(b));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
 
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("B"));
+                        ficha.AppendChild(columna);
+                        ;
                     }
                     else if (c2.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(b));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("B"));
+                        ficha.AppendChild(columna);
                     }
                 }
                 if (c3 != null)
                 {
                     if (c3.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(c));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("C"));
+                        ficha.AppendChild(columna);
 
                     }
                     else if (c3.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(c));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("C"));
+                        ficha.AppendChild(columna);
                     }
 
                     
@@ -1081,155 +1110,251 @@ namespace IPC2
                 {
                     if (c4.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(d));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("D"));
+                        ficha.AppendChild(columna);
 
                     }
                     else if (c4.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(d));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("D"));
+                        ficha.AppendChild(columna);
                     }
                 }
                 if (c5 != null)
                 {
                     if (c5.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(e));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("E"));
+                        ficha.AppendChild(columna);
 
                     }
                     else if (c5.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(e));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("E"));
+                        ficha.AppendChild(columna);
                     }
                 }
                 if (c6 != null)
                 {
                     if (c6.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(f));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("F"));
+                        ficha.AppendChild(columna);
 
                     }
                     else if (c6.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(f));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("F"));
+                        ficha.AppendChild(columna);
                     }
                 }
                 if (c7 != null)
                 {
                     if (c7.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(g));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("G"));
+                        ficha.AppendChild(columna);
 
                     }
                     else if (c7.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(g));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("G"));
+                        ficha.AppendChild(columna);
                     }
                 }
                 if (c8 != null)
                 {
                     if (c8.BackColor.Name == "White")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Blanco"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Blanco"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(h));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
 
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("H"));
+                        ficha.AppendChild(columna);
                     }
                     else if (c8.BackColor.Name == "Black")
                     {
-                        XmlElement ficha = doc.CreateElement("Ficha");
+                        XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
-                        XmlElement fcolor = doc.CreateElement("Color");
-                        fcolor.AppendChild(doc.CreateTextNode("Negro"));
-                        ficha.AppendChild(fcolor);
+                        XmlElement color = doc.CreateElement("color");
+                        color.AppendChild(doc.CreateTextNode("Negro"));
+                        ficha.AppendChild(color);
 
-                        XmlElement posicion = doc.CreateElement("Posicion");
-                        posicion.AppendChild(doc.CreateTextNode(h));
-                        ficha.AppendChild(posicion);
+                        XmlElement fila = doc.CreateElement("fila");
+                        fila.AppendChild(doc.CreateTextNode(i.ToString()));
+                        ficha.AppendChild(fila);
+
+                        XmlElement columna = doc.CreateElement("columna");
+                        columna.AppendChild(doc.CreateTextNode("H"));
+                        ficha.AppendChild(columna);
                     }
                 }
             }
             doc.Save("C:\\Users\\DELL\\Desktop\\ConexionSQL\\prueba.xml");
         }
+
+        public void cargar()
+        {
+            string cf = "";
+            string columna = "";
+            string fila = "";
+            string ficha = "";
+            int val = 0;
+
+            using (XmlTextReader xmlReader = new XmlTextReader(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\prueba.xml"))
+            {
+                while (xmlReader.Read())
+                {
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "ficha"))
+                    {
+                        val += 1;
+                    }
+                }
+            }
+
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\prueba.xml");
+            for (int i = 0; i < val; i++)
+            {
+                foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes[i].ChildNodes)
+                {
+                    if (xmlNode.Name.Equals("color"))
+                    {
+                        cf = xmlNode.InnerText;
+                    }
+                    else if (xmlNode.Name.Equals("columna"))
+                    {
+                        columna = xmlNode.InnerText;
+                    }
+                    else if (xmlNode.Name.Equals("fila"))
+                    {
+                        fila = xmlNode.InnerText;
+                    }
+                }
+                string columnaF = columna.ToLower();
+                ficha = columnaF + fila;
+                Button Nid = FindControl(ficha) as Button;
+                if (cf.Equals("negro"))
+                {
+                    //a1.BackColor = System.Drawing.Color.White;
+                    Nid.BackColor = System.Drawing.Color.Black;
+                }
+                else if (cf.Equals("blanco"))
+                {
+                    //a1.BackColor = System.Drawing.Color.White;
+                    Nid.BackColor = System.Drawing.Color.White;
+                }
+            }
+        }
+
+        
     }
         }
     

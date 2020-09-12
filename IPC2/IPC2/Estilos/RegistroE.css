@@ -1,0 +1,122 @@
+﻿*{
+    margin:0;
+    padding:0;
+    list-style:none;
+    
+}
+
+body {
+    background-color: seagreen;
+
+}
+
+header{
+    position:relative;
+    margin:auto;
+    width:1400px;
+    height:30px;
+   
+    text-align:center;
+    font-family:Arial;
+    font-size:x-large;
+    font-style:italic;
+    background-color:
+    color:cornsilk;
+    
+}
+#divCenter {
+    position:relative;
+    margin:auto;
+    width:1000px;
+    height:650px;
+    background-color: lightskyblue;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style:italic;
+    border-radius:30px;
+}
+
+#Nombre{
+    margin-left:60px;
+    margin-bottom:30px;
+    width:350px;
+    height:30px;
+
+}
+#Ape {
+    margin-left: 150px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 30px;
+}
+#Apel{
+    margin-left:440px;
+    margin-bottom:30px;
+
+}
+#Datos2{
+    text-align:center;
+    font-size:20px;
+
+}
+#U {
+    margin-left: 60px;
+    margin-bottom: 30px;
+    
+}
+#Usi {
+    margin-left: 60px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 30px;
+}
+#P {
+    margin-left: 450px;
+    margin-bottom: 30px;
+}
+#Con {
+    margin-left: 150px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 30px;
+}
+#Nac{
+    margin-left:400px;
+    margin-bottom:30px;
+    height:30px;
+    width:200px;
+
+}
+#Cor {
+    margin-left: 60px;
+    margin-bottom: 30px;
+}
+#C {
+    margin-left: 60px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 30px;
+}
+#Pai {
+    margin-left: 370px;
+    margin-bottom: 30px;
+}
+#Pa {
+    margin-left: 150px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 30px;
+}
+#Su{
+    text-align:center;
+    
+}
+#Bo{
+    width:200px;
+    border-radius:30px;
+    background-color:darkkhaki;
+}
+.Sep{
+    border:solid;
+    border-color:mediumseagreen;
+    border-radius:30px;
+}

@@ -1,0 +1,22 @@
+﻿*{
+    margin:0;
+    list-style:none;
+    padding:0;
+}
+
+
+
+#login{
+   text-align:center;
+   width:250px;
+   height:200px;
+   background-color:black;
+   margin-left:550px;
+   margin-top:200px;
+   color:white;
+
+}
+
+.lo{
+    margin-top:10px;
+}

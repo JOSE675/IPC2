@@ -1,0 +1,72 @@
+﻿*{
+    margin:0 1px 0 0px;
+    padding:0;
+    list-style:none;
+    
+}
+
+
+body {
+   background-color:seagreen;
+}
+
+#general {
+    border-radius: 50px;
+    position: relative;
+    left: 166px;
+    width: 1050px;
+    height: 220px;
+    background-color: red;
+    top: 446px;
+}
+#Modos{
+    position:absolute;
+    margin-left:50px;
+    background-color:darkcyan;
+    height: 200px;
+    width:200px;
+    top: 10px;
+    text-align:center;
+    
+}
+.BotonesP{
+    background-color:coral;
+    margin:20px 0px 20px 0px;
+    width:180px;
+}
+.Title{
+    font-size:medium;
+    font-style:italic;
+    color:darkolivegreen;
+    font-family:'Times New Roman', Times, serif;
+    text-align:center;
+    
+}
+#Registro{
+    position:absolute;
+    margin-left:300px;
+    width:200px;
+    height:200px;
+    background-color:darkcyan;
+    text-align:center;
+    top: 10px;
+    
+}
+#Partidas {
+    position: absolute;
+    margin-left: 550px;
+    background-color: darkcyan;
+    height: 200px;
+    width: 200px;
+    top: 10px;
+    text-align: center;
+}
+#Ayuda {
+    position: absolute;
+    margin-left: 800px;
+    background-color: darkcyan;
+    height: 200px;
+    width: 200px;
+    top: 10px;
+    text-align: center;
+}

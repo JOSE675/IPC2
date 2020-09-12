@@ -1,0 +1,6 @@
+C:\Users\DELL\source\repos\IPC2\Biblioteca\bin\Debug\Biblioteca.dll
+C:\Users\DELL\source\repos\IPC2\Biblioteca\bin\Debug\Biblioteca.pdb
+C:\Users\DELL\source\repos\IPC2\Biblioteca\obj\Debug\Biblioteca.csprojAssemblyReference.cache
+C:\Users\DELL\source\repos\IPC2\Biblioteca\obj\Debug\Biblioteca.csproj.CoreCompileInputs.cache
+C:\Users\DELL\source\repos\IPC2\Biblioteca\obj\Debug\Biblioteca.dll
+C:\Users\DELL\source\repos\IPC2\Biblioteca\obj\Debug\Biblioteca.pdb

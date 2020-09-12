@@ -1,0 +1,32 @@
+﻿*{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+body {    height: 85px;
+}
+
+.cuadros{
+    width:80px;
+    height:80px;
+    background-color:forestgreen;
+    border:1px solid #127793
+
+}
+.flotar{
+    float:left;
+    text-align:center;
+}
+form{
+    width:52%;
+    padding-left:350px;
+}
+
+.ficha{
+    border-radius:50px;
+    width=10px;
+    height=10px;
+    margin-top:10px;
+    
+}

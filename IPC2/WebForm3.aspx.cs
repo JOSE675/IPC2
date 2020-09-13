@@ -1341,12 +1341,12 @@ namespace IPC2
                 string columnaF = columna.ToLower();
                 ficha = columnaF + fila;
                 Button Nid = FindControl(ficha) as Button;
-                if (cf.Equals("negro"))
+                if (cf.Equals("Negro"))
                 {
                     //a1.BackColor = System.Drawing.Color.White;
                     Nid.BackColor = System.Drawing.Color.Black;
                 }
-                else if (cf.Equals("blanco"))
+                else if (cf.Equals("Blanco"))
                 {
                     //a1.BackColor = System.Drawing.Color.White;
                     Nid.BackColor = System.Drawing.Color.White;

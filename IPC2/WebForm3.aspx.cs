@@ -11,917 +11,2575 @@ namespace IPC2
     public partial class WebForm3 : System.Web.UI.Page
     {
         
-        string p = "a1";
+       int Cont=0;
+        int encontrado = 0;
+        LinkedList<string> vacios = new LinkedList<string>();
+        LinkedList<string> prueb = new LinkedList<string>();
+        LinkedList<Ficha> fichita = new LinkedList<Ficha>();
+        LinkedList<string> posiciones = new LinkedList<string>();
+        bool quiza = false;
+        public int contador = 0;
+        public int contador2 = 0;
+        int ascii = 97;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
-            d4.BackColor = System.Drawing.Color.White;
-            e4.BackColor = System.Drawing.Color.Black;
-            d5.BackColor = System.Drawing.Color.Black;
-            e5.BackColor = System.Drawing.Color.White;
+            ViewState["vali"] = ViewState["vali"];
+            contador++;
+            if (ViewState["vali"] == null)
+            {
+                d4.BackColor = System.Drawing.Color.White;
+                e4.BackColor = System.Drawing.Color.Black;
+                d5.BackColor = System.Drawing.Color.Black;
+                e5.BackColor = System.Drawing.Color.White;
+                ViewState["vali"] = 1;
+                ViewState["turno"] = 0;
+                ViewState["verifi"] = -1;
+                ViewState["t"] = 0;
+            }
             if (WebForm1.num == 1)
             {
                 cargar();
                 WebForm1.num = 0;
             }
+            guardarfichas("",(int)ViewState["turno"]);
             
+
+
+           
+
+
+
+        }
+        
+        public void guardarfichas(string q, int p)
+        {
+            if (contador == 1)
+            {
+                ViewState["bandera"] = ViewState["bandera"];
+                int x = 0;
+                int y = 0;
+                char a = 'a';
+                string ide = "";
+                string color = "";
+                if (q == "")
+                {
+                    fichita = new LinkedList<Ficha>();
+                    ascii = 97;
+                    for (int i = 1; i <= 8; i++)
+                    {
+
+                        for (int j = 1; j <= 8; j++)
+                        {
+                            ide = a + j.ToString();
+
+                            color = colores(ide);
+                            guardarID(i, j, verificarcolor(ide), ide, color);
+
+                        }
+
+                        a = (char)(ascii + 1);
+                        ascii++;
+                    }
+                }
+                else
+                {
+                    fichita = new LinkedList<Ficha>();
+                    ascii = 97;
+                    for (int i = 1; i <= 8; i++)
+                    {
+
+                        for (int j = 1; j <= 8; j++)
+                        {
+                            ide = a + j.ToString();
+
+                            color = colores(ide);
+                            if (ide.Equals(q) && p == 1)
+                            {
+                                guardarID(i, j, true, ide, "blanco");
+                            }
+                            else if (ide.Equals(q) && p == 0)
+                            {
+                                guardarID(i, j, true, ide, "negro");
+                            }
+                            else
+                            {
+                                guardarID(i, j, verificarcolor(ide), ide, color);
+                            }
+                        }
+
+                       
+                        if (ascii <= 104)
+                        {
+                            a = (char)(ascii + 1);
+                            ascii++;
+                        }
+                    }
+
+                    
+                }
+            }
+        }
+        public void mov()
+        {
+            if ((int)ViewState["turno"] == 0)
+            {
+                string co = buscar("blanco");
+                if (co != "Posiciones posibles:")
+                {
+                    Response.Write("<script>console.log('" + co + "')</script>");
+                }
+                else
+                {
+                    Response.Write("<script>console.log('Sin movimientos posibles')</script>");
+                    ViewState["turno"] = 1;
+                }
+            }
+            else
+            {
+                string co = buscar("negro");
+                if (co != "Posiciones posibles:")
+                {
+                    Response.Write("<script>console.log('" + co + "')</script>");
+                }
+                else
+                {
+                    Response.Write("<script>console.log('Sin movimientos posibles')</script>");
+                    ViewState["turno"] = 0;
+                }
+            }
+        }
+        public void guardarID(int x, int y, bool ocupado, string id, string color)
+        {
+            fichita.AddLast(new Ficha(x, y, ocupado, id, color));
+        }
+
+        public string colores(string id)
+        {
+
+            string colorsito = "";
+            Button c1 = FindControl(id) as Button;
+            if (c1 != null)
+            {
+                if (c1.BackColor.Name == "White")
+                {
+                    colorsito = "blanco";
+                }
+                else if (c1.BackColor.Name == "Black")
+                {
+                    colorsito = "negro";
+                }
+
+                else
+                {
+                    colorsito = "vacio";
+                }
+
+
+            }
+
+            return colorsito;
+        }
+
+        private void arribay(int x, int y, string color,int p)
+        {
+           
+
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y && prueba.Getcolor() != color && prueba.Getocupado() == true)
+                {
+                    if (prueba.Getcolor().Equals("blanco") && p == 0)
+                    {
+                        contador2++;
+                    }
+                    else if (prueba.Getcolor().Equals("negro") && p == 1){
+                        contador2++;
+                    }
+                    else {
+                        contador2 = 0;
+                        
+                    }
+                }
+
+            }
             
         }
 
-        protected void a1_Click(object sender, EventArgs e)
+        public bool verificarcolor(string id)
         {
-            if (Color()==1)
+            Button c1 = FindControl(id) as Button;
+            bool ocu;
+            if (c1.BackColor.Name == "White" && c1!=null)
             {
-                a1.BackColor = System.Drawing.Color.White;
-                Response.Write("<script>window.alert('"+d4.BackColor.Name+ "')</script>");
+                ocu = true;
+            }
+            else if (c1.BackColor.Name == "Black" && c1!=null)
+            {
+                ocu = true;
+            }
+
+            else
+            {
+                ocu = false;
+            }
+            return ocu;
+        }
+
+        public void pruebadiego(string id,int o){
+            int diego = 1;
+            int es = 1;
+            int puto = 1;
+            int culero = 1;
+            contador2 = 0;
+        bool keso = false;
+            foreach (Ficha prueba in fichita) 
+            {
+                if (prueba.Getid().Equals(id))
+                {
+                   
+                    if (o == 1) { prueba.Setcolor("blanco"); }
+                    if (o==0) { prueba.Setcolor("negro"); }
+                    diego = prueba.Getx()+1;
+                    es = prueba.Gety()+1;
+                    puto = prueba.Getx() - 1;
+                    culero = prueba.Gety() - 1;
+                    if(diego<=8 && es <= 8 && puto>=0 && culero>=0)
+                    {
+                        
+                        arribay(prueba.Getx(), es, prueba.Getcolor(),o); //si
+                        //arribay(diego, es, prueba.Getcolor(),o);
+                        //arribay(puto, es, prueba.Getcolor(),o);
+                        arribay(diego, prueba.Gety(), prueba.Getcolor(),o);
+                        arribay(puto, prueba.Gety(), prueba.Getcolor(),o);
+                        arribay(prueba.Getx(), culero, prueba.Getcolor(),o);
+                        //arribay(puto, culero, prueba.Getcolor(),o);
+                        //arribay(diego, culero, prueba.Getcolor(),o);
+                    }
+
+                }
+            }
+            
+        }
+
+        public void pruebadiego2(string id, int o)
+        {
+            
+            contador2 = 0;
+            string c = "";
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getid().Equals(id))
+                {
+                    
+                    if (o == 1 && (int)ViewState["t"]==1 && (int)ViewState["verifi"] != -1) { prueba.Setcolor("blanco");
+                        c = "negro";
+                        ViewState["t"] = 0;
+                        ViewState["verifi"] = 0;
+
+                    }
+                    if (o == 0 && (int)ViewState["t"] == 1 && (int)ViewState["verifi"] != 1) { prueba.Setcolor("negro");
+                        c = "blanco";
+                        ViewState["t"] = 0;
+                        ViewState["verifi"] = 0;
+
+                    }
+                    if (c == "")
+                    {
+                        continue;
+                    }
+                    arriba(prueba.Getx(), prueba.Gety(), c);
+                    abajo(prueba.Getx(), prueba.Gety(), c);
+                    Der(prueba.Getx(), prueba.Gety(), c);
+                    Izq(prueba.Getx(), prueba.Gety(), c);
+                    Dabajo(prueba.Getx(), prueba.Gety(), c);
+                    Iabajo(prueba.Getx(), prueba.Gety(), c);
+                }
+            }
+            
 
 
-            } else 
+
+
+        }
+        public void arriba(int x, int y,string color)
+        {
+            foreach (Ficha prueba in fichita)
             {
-                a1.BackColor = System.Drawing.Color.Black;
+                if(prueba.Getx()==x && prueba.Gety() == y)
+                {
+                    for (int i = y-1; i >=1 ; i--)
+                    {
+                        if (verificarco(x, i, color)==true)
+                        {
+                            prueb.AddLast(fichacolor(x, i,color));
+                            
+                        }
+                        else
+                        {
+                           
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+                        
+                    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void abajo(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    for (int i = y + 1; i <= 8; i++)
+                    {
+                        if (verificarco(x, i, color) == true)
+                        {
+                            posiciones.AddLast(fichacolor(x, i,color));
+                            
+                        }
+                        else
+                        {
+                            
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+
+                    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+        public void Der(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    for (int i = x + 1; i <= 8; i++)
+                    {
+                        if (verificarco(i, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(i, y,color));
+                            
+                            
+                        }
+                        else
+                        {
+                            
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+
+                    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void Izq(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    for (int i = x - 1; i >= 1; i--)
+                    {
+                        if (verificarco(i, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(i, y, color));
+                            
+
+                        }
+                        else
+                        {
+                            
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+
+                    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void Dabajo  (int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    while (true)
+                    {
+                        if(x> 8 && y > 8) {
+                            break;
+                        }
+
+                        if (verificarco(x, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(x, y, color));
+
+                        }
+                        else
+                        {
+
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+                        x++;
+                        y++;
+                    }
+                //    for (int i = y - 1; i >= 1; i--)
+                //    {
+                //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
+                //        if (verificarco(x, i, color) == true)
+                //        {
+                //            prueb.AddLast(fichacolor(x, i, color));
+
+                //        }
+                //        else
+                //        {
+
+                //            if (Cont == 1)
+                //            {
+                //                foreach (string pru in prueb)
+                //                {
+                //                    posiciones.AddLast(pru);
+                //                }
+                //            }
+                //            Cont = 0;
+                //            prueb = new LinkedList<string>();
+                //            break;
+                //        }
+
+                //    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void Iabajo(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    while (true)
+                    {
+                        if (x > 8 && y > 8)
+                        {
+                            break;
+                        }
+
+                        if (verificarco(x, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(x, y, color));
+
+                        }
+                        else
+                        {
+
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+                        x--;
+                        y++;
+                    }
+                    //    for (int i = y - 1; i >= 1; i--)
+                    //    {
+                    //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
+                    //        if (verificarco(x, i, color) == true)
+                    //        {
+                    //            prueb.AddLast(fichacolor(x, i, color));
+
+                    //        }
+                    //        else
+                    //        {
+
+                    //            if (Cont == 1)
+                    //            {
+                    //                foreach (string pru in prueb)
+                    //                {
+                    //                    posiciones.AddLast(pru);
+                    //                }
+                    //            }
+                    //            Cont = 0;
+                    //            prueb = new LinkedList<string>();
+                    //            break;
+                    //        }
+
+                    //    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void Darriba(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    while (true)
+                    {
+                        if (x > 8 && y > 8)
+                        {
+                            break;
+                        }
+
+                        if (verificarco(x, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(x, y, color));
+
+                        }
+                        else
+                        {
+
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+                        x++;
+                        y--;
+                    }
+                    //    for (int i = y - 1; i >= 1; i--)
+                    //    {
+                    //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
+                    //        if (verificarco(x, i, color) == true)
+                    //        {
+                    //            prueb.AddLast(fichacolor(x, i, color));
+
+                    //        }
+                    //        else
+                    //        {
+
+                    //            if (Cont == 1)
+                    //            {
+                    //                foreach (string pru in prueb)
+                    //                {
+                    //                    posiciones.AddLast(pru);
+                    //                }
+                    //            }
+                    //            Cont = 0;
+                    //            prueb = new LinkedList<string>();
+                    //            break;
+                    //        }
+
+                    //    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public void Iarriba(int x, int y, string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+                    while (true)
+                    {
+                        if (x > 8 && y > 8)
+                        {
+                            break;
+                        }
+
+                        if (verificarco(x, y, color) == true)
+                        {
+                            prueb.AddLast(fichacolor(x, y, color));
+
+                        }
+                        else
+                        {
+
+                            if (Cont == 1)
+                            {
+                                foreach (string pru in prueb)
+                                {
+                                    posiciones.AddLast(pru);
+                                }
+                            }
+                            Cont = 0;
+                            prueb = new LinkedList<string>();
+                            break;
+                        }
+                        x--;
+                        y--;
+                    }
+                    //    for (int i = y - 1; i >= 1; i--)
+                    //    {
+                    //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
+                    //        if (verificarco(x, i, color) == true)
+                    //        {
+                    //            prueb.AddLast(fichacolor(x, i, color));
+
+                    //        }
+                    //        else
+                    //        {
+
+                    //            if (Cont == 1)
+                    //            {
+                    //                foreach (string pru in prueb)
+                    //                {
+                    //                    posiciones.AddLast(pru);
+                    //                }
+                    //            }
+                    //            Cont = 0;
+                    //            prueb = new LinkedList<string>();
+                    //            break;
+                    //        }
+
+                    //    }
+                }
+            }
+            cambiar(color);
+            vacios = new LinkedList<string>();
+            posiciones = new LinkedList<string>();
+
+        }
+
+        public string buscar(string color)
+        {
+            string casillas="Posiciones posibles:";
+            int y;
+            int x;
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getcolor().Equals("vacio"))
+                {
+                    if (colorcerca(prueba.Getx(), prueba.Gety() + 1, color)==true)
+                    {
+                        y = prueba.Gety() + 1;
+                        while (true)
+                        {
+                            
+                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8 )
+                            {
+                                
+                                Response.Write("<script>console.log('aqui esta tu concha abajo" + prueba.Getid() +prueba.Getx()+" "+y+ prueba.Getcolor()+ "')</script>");
+                                casillas += " "+prueba.Getid();
+                                break;
+                            }
+                            if (y >= 8)
+                            {
+                                break;
+                            }
+                            y++;
+
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()+1, prueba.Gety(), color) == true)
+                    {
+                        x = prueba.Getx()+1;
+                        while (true)
+                        {
+                            
+                            if (verificarco2(x, prueba.Gety(), color) == false && x >= 1 && x <= 8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha derecha" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (x >= 8)
+                            {
+                                break;
+                            }
+                            x++;
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()-1, prueba.Gety(), color) == true)
+                    {
+                        x = prueba.Getx() - 1;
+                        while (true)
+                        {
+                            
+                            if (verificarco2(x, prueba.Gety(), color) == false && x>=1 && x<=8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha izquierda" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (x <= 1)
+                            {
+                                break;
+                            }
+                            x--;
+                        }
+                    }
+
+                    if (colorcerca(prueba.Getx(), prueba.Gety() - 1, color) == true)
+                    {
+                        y = prueba.Gety() - 1;
+                        while (true)
+                        {
+                            
+                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha arriba" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (y <= 1)
+                            {
+                                break;
+                            }
+                            y--;
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()+1, prueba.Gety() + 1, color) == true)
+                    {
+                        x = prueba.Getx() + 1;
+                        y = prueba.Gety() + 1;
+                        while (true)
+                        {
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
+                            {
+                                break;
+                            }
+                            x++;
+                            y++;
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()-1, prueba.Gety() + 1, color) == true)
+                    {
+                        x = prueba.Getx() - 1;
+                        y = prueba.Gety() + 1;
+                        while (true)
+                        {
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x>=1 && x<=8)
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
+                            {
+                                break;
+                            }
+                            x--;
+                            y++;
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()-1, prueba.Gety() - 1, color) == true)
+                    {
+                        x = prueba.Getx() - 1;
+                        y = prueba.Gety() - 1;
+                        while (true)
+                        {
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
+                            {
+                                break;
+                            }
+                            x--;
+                            y--;
+                        }
+                    }
+                    if (colorcerca(prueba.Getx()+1, prueba.Gety() -1 , color) == true)
+                    {
+                        x = prueba.Getx() + 1;
+                        y = prueba.Gety() - 1;
+                        while (true)
+                        {
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            {
+                                Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
+                                casillas += " " + prueba.Getid();
+                                break;
+                            }
+                            if(x>=8 || y >= 8 ||x<=1 || y<=1)
+                            {
+                                break;
+                            }
+                            y--;
+                            x++;
+                        }
+                    }
+                }
+            }
+            return casillas;
+            
+        }
+
+        public bool colorcerca(int x,int y,string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if(prueba.Getx()==x && prueba.Gety() == y)
+                {
+                    if (prueba.Getcolor() != color && prueba.Getcolor()!="vacio")
+                    {
+                        Response.Write("<script>console.log('asdhaksdhaks" + x.ToString() + y.ToString() + color + "')</script>");
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool verificarco(int x, int y, string color)
+        {
+            bool p = false;
+            foreach (Ficha prueba in fichita)
+            {
+                if(prueba.Getx()==x && prueba.Gety() == y)
+                {
+                    if (prueba.Getcolor().Equals(color))
+                    {
+                        p = false;
+                        Cont++;
+                        encontrado = 1;
+                        vacios.AddLast(prueba.Getid());
+                        return p;
+                    }
+                    else if(prueba.Getcolor()=="vacio")
+                    {
+                        p = false;
+                        
+                        return p;
+
+                    }
+                    else
+                    {
+                        p = true;
+                        
+                        return p;
+                    }
+                }
+            }
+            
+            return p;
+        }
+
+        public bool verificarco2(int x, int y, string color)
+        {
+            bool p = false;
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y)
+                {
+
+                    if (color.Equals(prueba.Getcolor()) && prueba.Getcolor()!="vacio")
+                    {
+
+                        Response.Write("<script>console.log('aqui esta tu concha abajo prueba: " + "id: "+prueba.Getid() + "pos x: "+prueba.Getx() + "posy: " + y + prueba.Getcolor() + "')</script>");
+                        p = false;
+                        Cont++;
+
+
+                        return p;
+                    }else if (color != prueba.Getcolor())
+                    {
+                        p = true;
+                        return p;
+                    }
+
+
+
+                }
+            }
+
+            return p;
+        }
+
+        public string fichacolor(int x, int y,string color)
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                if(prueba.Getx()==x && prueba.Gety() == y)
+                {
+                    if (prueba.Getcolor() == color)
+                    {
+                        
+                    }
+                    return prueba.Getid();
+                }
+            }
+            return "";
+        }
+
+        public void cambiar(string color){
+            if (color == "blanco" && vacios.Count==0)
+            {
+                ViewState["turno"] = 1;
+            } else if (color == "negro" && vacios.Count == 0 )
+            {
+                ViewState["turno"] = 0;
+            }
+            foreach (string o in posiciones)
+            {
+                Button c1 = FindControl(o) as Button;
+               
+                foreach (string vac in vacios)
+                {
+                    Button c2 = FindControl(vac) as Button;
+                    if (color == "blanco")
+                    {
+                        
+                        if (c2.BackColor.Name=="White")
+                        {
+                            ViewState["turno"] = 1;
+                            c1.BackColor = System.Drawing.Color.White;
+                            guardarfichas(o, 1);
+                            encontrado = 0;
+                        }
+                    }
+                    else if (color == "negro")
+                    {
+                        
+                        if (c2.BackColor.Name=="Black")
+                        {
+                            ViewState["turno"] = 0;
+                            c1.BackColor = System.Drawing.Color.Black;
+                            guardarfichas(o, 0);
+                            encontrado = 0;
+                        }
+                    }
+                }
+                    
+                    
                 
             }
+        }
+        protected void a1_Click(object sender, EventArgs e)
+        {
+            pruebadiego("a1", Color2());
+            if (contador2 >= 1)
+            {
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a1.BackColor = System.Drawing.Color.Black;
+
+                }
+            }
+            pruebadiego2("a1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b1", Color2());
+            if (contador2 >= 1)
             {
-                b1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("b1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c1", Color2());
+            if (contador2 >= 1)
             {
-                c1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                c1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d1", Color2());
+            if (contador2 >= 1)
             {
-                d1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e1", Color2());
+            if (contador2 >= 1)
             {
-                e1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e1.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("e1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f1", Color2());
+            if (contador2 >= 1)
             {
-                f1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g1", Color2());
+            if (contador2 >= 1)
             {
-                g1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                g1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h1_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h1", Color2());
+            if (contador2 >= 1)
             {
-                h1.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h1.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h1.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h1.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h1", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a2", Color2());
+            if (contador2 >= 1)
             {
-                a2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b2", Color2());
+            if (contador2 >= 1)
             {
-                b2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("b2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c2", Color2());
+            if (contador2 >= 1)
             {
-                c2.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                c2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d2", Color2());
+            if (contador2 >= 1)
             {
-                d2.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e2", Color2());
+            if (contador2 >= 1)
             {
-                e2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("e2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f2", Color2());
+            if (contador2 >= 1)
             {
-                f2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                f2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g2", Color2());
+            if (contador2 >= 1)
             {
-                g2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                g2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h2_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h2", Color2());
+            if (contador2 >= 1)
             {
-                h2.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h2.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h2.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                h2.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h2", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a3", Color2());
+            if (contador2 >= 1)
             {
-                a3.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b3", Color2());
+            if (contador2 >= 1)
             {
-                b3.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b3.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("b3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c3", Color2());
+            if (contador2 >= 1)
             {
-                c3.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                c3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d3_Click(object sender, EventArgs e)
         {
-            if (Color()== 1)
+            pruebadiego("d3", Color2());
+            if (contador2 >= 1)
             {
-                d3.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e3", Color2());
+            if (contador2 >= 1)
             {
-                e3.BackColor = System.Drawing.Color.White;
-              
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    e3.BackColor = System.Drawing.Color.White;
+                    ViewState["t"] = 1;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    e3.BackColor = System.Drawing.Color.Black;
+                    ViewState["t"] = 1;
+
+                }
             }
-            else 
-            {
-                e3.BackColor = System.Drawing.Color.Black;
-                
-            }
+                pruebadiego2("e3", (int)ViewState["turno"]);
+                mov();
+            
         }
 
         protected void f3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f3", Color2());
+            if (contador2 >= 1)
             {
-                f3.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g3", Color2());
+            if (contador2 >= 1)
             {
-                g3.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                g3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h3_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h3", Color2());
+            if (contador2 >= 1)
             {
-                h3.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h3.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h3.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h3.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h3", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a4", Color2());
+            if (contador2 >= 1)
             {
-                a4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a4.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b4", Color2());
+            if (contador2 >= 1)
             {
-                b4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b4.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("b4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c4", Color2());
+            if (contador2 >= 1)
             {
-                c4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                c4.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d4", Color2());
+            if (contador2 >= 1)
             {
-                d4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d4.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("d4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e4", Color2());
+            if (contador2 >= 1)
             {
-                e4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e4.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("e4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f4",Color2());
+            if (contador2 >= 1)
             {
-                f4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f4.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g4",Color2());
+            if (contador2 >= 1)
             {
-                g4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g4.BackColor = System.Drawing.Color.White;
+                    
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g4.BackColor = System.Drawing.Color.Black;
+                    
+                }
             }
-            else 
-            {
-                g4.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h4_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h4",Color2());
+            if (contador2 >= 1)
             {
-                h4.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h4.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h4.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h4.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h4", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a5", Color2());
+            if (contador2 >= 1)
             {
-                a5.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b5", Color2());
+            if (contador2 >= 1)
             {
-                b5.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("b5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c5", Color2());
+            if (contador2 >= 1)
             {
-                c5.BackColor = System.Drawing.Color.White;
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c5.BackColor = System.Drawing.Color.White;
+                    
+                    
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c5.BackColor = System.Drawing.Color.Black;
+                    
+
+
+                }
                 
             }
-            else 
-            {
-                c5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            
+            pruebadiego2("c5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d5", Color2());
+            if (contador2 >= 1)
             {
-                d5.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e5", Color2());
+            if (contador2 >= 1)
             {
-                e5.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e5.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("e5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f5",Color2());
+            if (contador2 >= 1)
             {
-                f5.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g5",Color2());
+            if (contador2 >= 1)
             {
-                g5.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                g5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h5_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h5",Color2());
+            if (contador2 >= 1)
             {
-                h5.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h5.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h5.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h5.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h5", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a6", Color2());
+            if (contador2 >= 1)
             {
-                a6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b6", Color2());
+            if (contador2 >= 1)
             {
-                b6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("b6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c6", Color2());
+            if (contador2 >= 1)
             {
-                c6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                c6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d6", Color2());
+            if (contador2 >= 1)
             {
-                d6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                d6.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("d6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e6", Color2());
+            
+            if (contador2 >= 1)
             {
-                e6.BackColor = System.Drawing.Color.White;
-                
+
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                e6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("e6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f6", Color2());
+            if (contador2 >= 1)
             {
-                f6.BackColor = System.Drawing.Color.White;
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f6.BackColor = System.Drawing.Color.Black;
+
+                }
                 
             }
-            else 
-            {
-                f6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g6", Color2());
+            if (contador2 >= 1)
             {
-                g6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                g6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h6_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h6", Color2());
+            if (contador2 >= 1)
             {
-                h6.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h6.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h6.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h6.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h6", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a7", Color2());
+            if (contador2 >= 1)
             {
-                a7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b7", Color2());
+            if (contador2 >= 1)
             {
-                b7.BackColor = System.Drawing.Color.White;
-                
-            }
-            else 
-            {
-                b7.BackColor = System.Drawing.Color.Black;
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b7.BackColor = System.Drawing.Color.Black;
                
+                }
             }
+            pruebadiego2("b7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c7", Color2());
+            if (contador2 >= 1)
             {
-                c7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                c7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d7", Color2());
+            if (contador2 >= 1)
             {
-                d7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e7", Color2());
+            if (contador2 >= 1)
             {
-                e7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e7.BackColor = System.Drawing.Color.Black;
-               
-            }
+            pruebadiego2("e7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f7_Click(object sender, EventArgs e)
         {
-            if (Color()== 1)
+            pruebadiego("f7", Color2());
+            if (contador2 >= 1)
             {
-                f7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g7", Color2());
+            if (contador2 >= 1)
             {
-                g7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                g7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h7_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h7", Color2());
+            if (contador2 >= 1)
             {
-                h7.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h7.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    h7.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h7.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h7", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void a8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("a8", Color2());
+            if (contador2 >= 1)
             {
-                a8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    a8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    a8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                a8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("a8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void b8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("b8", Color2());
+            if (contador2 >= 1)
             {
-                b8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    b8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    b8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                b8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("b8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void c8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("c8", Color2());
+            if (contador2 >= 1)
             {
-                c8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    c8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    c8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                c8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("c8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void d8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("d8", Color2());
+            if (contador2 >= 1)
             {
-                d8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    d8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    d8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                d8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("d8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void e8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("e8", Color2());
+            if (contador2 >= 1)
             {
-                e8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    e8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    e8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                e8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("e8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void f8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("f8", Color2());
+            if (contador2 >= 1)
             {
-                f8.BackColor = System.Drawing.Color.White;
-               
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    f8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    f8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                f8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("f8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void g8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("g8", Color2());
+            if (contador2 >= 1)
             {
-                g8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    g8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    g8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else
-            {
-                g8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("g8", (int)ViewState["turno"]);
+            mov();
         }
 
         protected void h8_Click(object sender, EventArgs e)
         {
-            if (Color() == 1)
+            pruebadiego("h8", Color2());
+            if (contador2 >= 1)
             {
-                h8.BackColor = System.Drawing.Color.White;
-                
+                if (Color() == 1)
+                {
+                    ViewState["bandera"] = 0;
+                    ViewState["t"] = 1;
+                    h8.BackColor = System.Drawing.Color.White;
+
+                }
+                else
+                {
+                    ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
+                    h8.BackColor = System.Drawing.Color.Black;
+
+                }
             }
-            else 
-            {
-                h8.BackColor = System.Drawing.Color.Black;
-                
-            }
+            pruebadiego2("h8", (int)ViewState["turno"]);
+            mov();
         }
 
         public int Color()
@@ -941,7 +2599,9 @@ namespace IPC2
                 {
                     ViewState["click"] = 1;
                     re = (int)ViewState["click"];
-                   
+                    
+
+
                 }
                 return re;
             
@@ -955,6 +2615,42 @@ namespace IPC2
             }
                 
             }
+
+        public int Color2()
+        {
+            
+
+            if (ViewState["click2"] != null)
+            {
+
+                if ((int)ViewState["click2"] == 1 && (int)ViewState["bandera"]!=1)
+                {
+                    ViewState["click2"] = 0;
+                    ViewState["re"] = (int)ViewState["click2"];
+                    
+
+                }
+                else if ((int)ViewState["click2"] == 0 && (int)ViewState["bandera"] != 0)
+                {
+                    ViewState["click2"] = 1;
+                    ViewState["re"] = (int)ViewState["click2"];
+                    
+                }
+                return (int)ViewState["re"];
+
+
+            }
+            else
+            {
+                ViewState["click2"] = 1;
+                ViewState["re"] = 1;
+                ViewState["bandera"]= 1;
+                return (int)ViewState["re"];
+                
+            }
+
+        }
+
 
         protected void Button1_Click(object sender, EventArgs e)
         {
@@ -1353,8 +3049,11 @@ namespace IPC2
                 }
             }
         }
-
         
+
+
+
     }
-        }
+   
+}
     

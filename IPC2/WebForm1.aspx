@@ -23,7 +23,9 @@
         <div id="Modos">
         <header class="Title">Modos de juego</header>
        
-            <asp:Button CssClass="BotonesP" ID="Single" runat="server" Text="Partida individual" />
+            <asp:Button CssClass="BotonesP" ID="Single" runat="server" Text="Partida JCJ"  />
+            <br />
+            <asp:Button CssClass="BotonesP" ID="SingleM" runat="server" Text="Partida JCM"  />
             <br />
             <asp:Button CssClass="BotonesP" ID="Multi" runat="server" Text="Multijugador"  />
             <br />

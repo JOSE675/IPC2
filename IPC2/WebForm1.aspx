@@ -23,7 +23,7 @@
         <div id="Modos">
         <header class="Title">Modos de juego</header>
        
-            <asp:Button CssClass="BotonesP" ID="Single" runat="server" Text="Partida JCJ"  />
+            <asp:Button CssClass="BotonesP" ID="Single" runat="server" Text="Partida JCJ" OnClick="Single_Click"  />
             <br />
             <asp:Button CssClass="BotonesP" ID="SingleM" runat="server" Text="Partida JCM"  />
             <br />

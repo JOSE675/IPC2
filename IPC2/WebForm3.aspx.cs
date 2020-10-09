@@ -10,9 +10,14 @@ namespace IPC2
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
-        
-       int Cont=0;
-        int encontrado = 0;
+
+        int Cont = 0;
+        int auxiliar = 0;
+        int ayuda;
+        int pruebas = 0;
+        int l = 0;
+        int encon = 0;
+        int fin = 0;
         LinkedList<string> vacios = new LinkedList<string>();
         LinkedList<string> prueb = new LinkedList<string>();
         LinkedList<Ficha> fichita = new LinkedList<Ficha>();
@@ -20,8 +25,9 @@ namespace IPC2
         bool quiza = false;
         public int contador = 0;
         public int contador2 = 0;
+        public int contador3 = 0;
         int ascii = 97;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             ViewState["vali"] = ViewState["vali"];
@@ -40,18 +46,16 @@ namespace IPC2
             if (WebForm1.num == 1)
             {
                 cargar();
+                verdes();
                 WebForm1.num = 0;
             }
-            guardarfichas("",(int)ViewState["turno"]);
-            
+            guardarfichas("", (int)ViewState["turno"]);
 
-
-           
 
 
 
         }
-        
+
         public void guardarfichas(string q, int p)
         {
             if (contador == 1)
@@ -108,7 +112,7 @@ namespace IPC2
                             }
                         }
 
-                       
+
                         if (ascii <= 104)
                         {
                             a = (char)(ascii + 1);
@@ -116,7 +120,7 @@ namespace IPC2
                         }
                     }
 
-                    
+
                 }
             }
         }
@@ -127,12 +131,14 @@ namespace IPC2
                 string co = buscar("blanco");
                 if (co != "Posiciones posibles:")
                 {
+                    fin = 0;
                     Response.Write("<script>console.log('" + co + "')</script>");
                 }
                 else
                 {
                     Response.Write("<script>console.log('Sin movimientos posibles')</script>");
                     ViewState["turno"] = 1;
+                    fin++;
                 }
             }
             else
@@ -140,13 +146,19 @@ namespace IPC2
                 string co = buscar("negro");
                 if (co != "Posiciones posibles:")
                 {
+                    fin = 0;
                     Response.Write("<script>console.log('" + co + "')</script>");
                 }
                 else
                 {
                     Response.Write("<script>console.log('Sin movimientos posibles')</script>");
                     ViewState["turno"] = 0;
+                    fin++;
                 }
+            }
+            if (fin == 2)
+            {
+                Response.Write("<script>console.log('Partida terminada!')</script>");
             }
         }
         public void guardarID(int x, int y, bool ocupado, string id, string color)
@@ -181,9 +193,9 @@ namespace IPC2
             return colorsito;
         }
 
-        private void arribay(int x, int y, string color,int p)
+        private void arribay(int x, int y, string color, int p)
         {
-           
+
 
             foreach (Ficha prueba in fichita)
             {
@@ -191,30 +203,39 @@ namespace IPC2
                 {
                     if (prueba.Getcolor().Equals("blanco") && p == 0)
                     {
+
+                        contador2++;
+
+                    }
+                    else if (prueba.Getcolor().Equals("negro") && p == 1)
+                    {
                         contador2++;
                     }
-                    else if (prueba.Getcolor().Equals("negro") && p == 1){
-                        contador2++;
-                    }
-                    else {
+                    else
+                    {
                         contador2 = 0;
-                        
+
                     }
+
                 }
 
+
+
+
+
             }
-            
+
         }
 
         public bool verificarcolor(string id)
         {
             Button c1 = FindControl(id) as Button;
             bool ocu;
-            if (c1.BackColor.Name == "White" && c1!=null)
+            if (c1.BackColor.Name == "White" && c1 != null)
             {
                 ocu = true;
             }
-            else if (c1.BackColor.Name == "Black" && c1!=null)
+            else if (c1.BackColor.Name == "Black" && c1 != null)
             {
                 ocu = true;
             }
@@ -226,59 +247,529 @@ namespace IPC2
             return ocu;
         }
 
-        public void pruebadiego(string id,int o){
+        public void pruebadiego(string id, int o)
+        {
             int diego = 1;
             int es = 1;
             int puto = 1;
             int culero = 1;
             contador2 = 0;
-        bool keso = false;
-            foreach (Ficha prueba in fichita) 
+
+            foreach (Ficha prueba in fichita)
             {
                 if (prueba.Getid().Equals(id))
                 {
-                   
+
                     if (o == 1) { prueba.Setcolor("blanco"); }
-                    if (o==0) { prueba.Setcolor("negro"); }
-                    diego = prueba.Getx()+1;
-                    es = prueba.Gety()+1;
+                    if (o == 0) { prueba.Setcolor("negro"); }
+                    diego = prueba.Getx() + 1;
+                    es = prueba.Gety() + 1;
                     puto = prueba.Getx() - 1;
                     culero = prueba.Gety() - 1;
-                    if(diego<=8 && es <= 8 && puto>=0 && culero>=0)
+                    if (diego <= 9 && es <= 9 && puto >= 0 && culero >= 0)
                     {
-                        
-                        arribay(prueba.Getx(), es, prueba.Getcolor(),o); //si
-                        //arribay(diego, es, prueba.Getcolor(),o);
-                        //arribay(puto, es, prueba.Getcolor(),o);
-                        arribay(diego, prueba.Gety(), prueba.Getcolor(),o);
-                        arribay(puto, prueba.Gety(), prueba.Getcolor(),o);
-                        arribay(prueba.Getx(), culero, prueba.Getcolor(),o);
-                        //arribay(puto, culero, prueba.Getcolor(),o);
-                        //arribay(diego, culero, prueba.Getcolor(),o);
+
+                        arribay(prueba.Getx(), es, prueba.Getcolor(), o);
+                        arribay(diego, es, prueba.Getcolor(), o);
+                        arribay(puto, es, prueba.Getcolor(), o);
+                        arribay(diego, prueba.Gety(), prueba.Getcolor(), o);
+                        arribay(puto, prueba.Gety(), prueba.Getcolor(), o);
+                        arribay(prueba.Getx(), culero, prueba.Getcolor(), o);
+                        arribay(puto, culero, prueba.Getcolor(), o);
+                        arribay(diego, culero, prueba.Getcolor(), o);
+
+
                     }
+                    verabajo(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verarriba(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verDer(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verIzq(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verabajoD(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verabajoI(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verarribaD(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    verarribaI(prueba.Getx(), prueba.Gety(), prueba.Getcolor());
+                    if (pruebas >= 1 && ayuda >= 1)
+                    {
+                        contador3 = ayuda;
+                        ayuda = 0;
+                        pruebas = 0;
+                        Cont = 0;
+                        vacios.Clear();
+                    }
+                    else
+                    {
+                        contador3 = 0;
+                        pruebas = 0;
+                        vacios.Clear();
+                    }
+
 
                 }
             }
-            
+
         }
+        public void verarriba(int x, int y, string color)
+        {
+            int l = 0;
+            contador3 = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        for (int i = y - 1; i >= 1; i--)
+                        {
+                            verificarco(x, i, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+                            }
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verabajo(int x, int y, string color)
+        {
+            int l = 0;
+            contador3 = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        for (int i = y + 1; i <= 8; i++)
+                        {
+                            verificarco(x, i, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+
+
+                            }
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verDer(int x, int y, string color)
+        {
+            int l = 0;
+            contador3 = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        for (int i = x + 1; i <= 8; i++)
+                        {
+                            verificarco(i, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+
+
+                            }
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verIzq(int x, int y, string color)
+        {
+            int l = 0;
+            contador3 = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        for (int i = x - 1; i >= 1; i--)
+                        {
+                            verificarco(i, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+
+                            }
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verabajoD(int x, int y, string color)
+        {
+            int po = 0;
+            x = x + 1;
+            y = y + 1;
+            int l = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (po == 1)
+                    {
+                        po = 0;
+                        break;
+                    }
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        while (true)
+                        {
+                            if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
+                            {
+                                break;
+                            }
+                            verificarco(x, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    po = 1;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+                            }
+                            if (ayuda != 0 && l != 0)
+                            {
+                                po = 1;
+                                break;
+                            }
+                            x++;
+                            y++;
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verabajoI(int x, int y, string color)
+        {
+            int po = 0;
+            x = x - 1;
+            y = y + 1;
+            int l = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (po == 1)
+                    {
+                        po = 0;
+                        break;
+                    }
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        while (true)
+                        {
+                            if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
+                            {
+                                break;
+                            }
+
+                            verificarco(x, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    po = 1;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+                            }
+                            if (ayuda != 0 && l != 0)
+                            {
+                                po = 1;
+                                break;
+                            }
+                            x--;
+                            y++;
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+        public void verarribaD(int x, int y, string color)
+        {
+            int po = 0;
+            x = x + 1;
+            y = y - 1;
+            int l = 0;
+            if (ayuda == 0)
+            {
+                foreach (Ficha prueba in fichita)
+                {
+                    if (po == 1)
+                    {
+                        po = 0;
+                        break;
+                    }
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        while (true)
+                        {
+                            if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
+                            {
+                                break;
+                            }
+
+                            verificarco(x, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    po = 1;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+                                pruebas++;
+
+
+                            }
+                            if (ayuda != 0 && l != 0)
+                            {
+                                po = 1;
+                                break;
+                            }
+                            x++;
+                            y--;
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+
+            }
+        }
+        public void verarribaI(int x, int y, string color)
+        {
+            int po = 0;
+            x = x - 1;
+            y = y - 1;
+            int l = 0;
+            if (ayuda == 0)
+            {
+
+
+                foreach (Ficha prueba in fichita)
+                {
+                    if (po == 1)
+                    {
+                        po = 0;
+                        break;
+                    }
+                    if (prueba.Getx() == x && prueba.Gety() == y)
+                    {
+                        while (true)
+                        {
+                            if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
+                            {
+                                break;
+                            }
+
+                            verificarco(x, y, color);
+                            if (contador3 != 0 && auxiliar != 1 && Cont >= 1)
+                            {
+                                l++;
+                                Cont = 0;
+                                break;
+
+                            }
+                            else
+                            {
+                                if (Cont == 1)
+                                {
+                                    Cont = 0;
+                                    po = 1;
+                                    break;
+                                }
+                                if (Cont == 0)
+                                {
+                                    auxiliar = 0;
+                                }
+
+                                pruebas++;
+
+
+                            }
+                            if (ayuda != 0 && l != 0)
+                            {
+                                po = 1;
+                                break;
+                            }
+                            y--;
+                            x--;
+                        }
+                    }
+                }
+                if (l == 0)
+                {
+                    ayuda = 0;
+                }
+            }
+        }
+
+
+
 
         public void pruebadiego2(string id, int o)
         {
-            
+            contador3 = 0;
             contador2 = 0;
+            ayuda = 0;
             string c = "";
             foreach (Ficha prueba in fichita)
             {
                 if (prueba.Getid().Equals(id))
                 {
-                    
-                    if (o == 1 && (int)ViewState["t"]==1 && (int)ViewState["verifi"] != -1) { prueba.Setcolor("blanco");
+
+                    if (o == 1 && (int)ViewState["t"] == 1 && (int)ViewState["verifi"] != -1)
+                    {
+                        prueba.Setcolor("blanco");
                         c = "negro";
                         ViewState["t"] = 0;
                         ViewState["verifi"] = 0;
 
                     }
-                    if (o == 0 && (int)ViewState["t"] == 1 && (int)ViewState["verifi"] != 1) { prueba.Setcolor("negro");
+                    if (o == 0 && (int)ViewState["t"] == 1 && (int)ViewState["verifi"] != 1)
+                    {
+                        prueba.Setcolor("negro");
                         c = "blanco";
                         ViewState["t"] = 0;
                         ViewState["verifi"] = 0;
@@ -294,30 +785,36 @@ namespace IPC2
                     Izq(prueba.Getx(), prueba.Gety(), c);
                     Dabajo(prueba.Getx(), prueba.Gety(), c);
                     Iabajo(prueba.Getx(), prueba.Gety(), c);
+                    Darriba(prueba.Getx(), prueba.Gety(), c);
+                    Iarriba(prueba.Getx(), prueba.Gety(), c);
                 }
             }
-            
+
 
 
 
 
         }
-        public void arriba(int x, int y,string color)
+        public void arriba(int x, int y, string color)
         {
             foreach (Ficha prueba in fichita)
             {
-                if(prueba.Getx()==x && prueba.Gety() == y)
+                if (prueba.Getx() == x && prueba.Gety() == y)
                 {
-                    for (int i = y-1; i >=1 ; i--)
+                    for (int i = y - 1; i >= 1; i--)
                     {
-                        if (verificarco(x, i, color)==true)
+                        if (verificarco(x, i, color) == true)
                         {
-                            prueb.AddLast(fichacolor(x, i,color));
-                            
+                            prueb.AddLast(fichacolor(x, i, color));
+
                         }
                         else
                         {
-                           
+                            if (auxiliar == 1)
+                            {
+                                auxiliar = 0;
+
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
@@ -329,13 +826,14 @@ namespace IPC2
                             prueb = new LinkedList<string>();
                             break;
                         }
-                        
+
                     }
                 }
             }
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
@@ -349,12 +847,16 @@ namespace IPC2
                     {
                         if (verificarco(x, i, color) == true)
                         {
-                            posiciones.AddLast(fichacolor(x, i,color));
-                            
+                            posiciones.AddLast(fichacolor(x, i, color));
+
                         }
                         else
                         {
-                            
+                            if (auxiliar == 1)
+                            {
+                                auxiliar = 0;
+
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
@@ -373,6 +875,7 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
         public void Der(int x, int y, string color)
@@ -385,13 +888,18 @@ namespace IPC2
                     {
                         if (verificarco(i, y, color) == true)
                         {
-                            prueb.AddLast(fichacolor(i, y,color));
-                            
-                            
+                            prueb.AddLast(fichacolor(i, y, color));
+
+
                         }
                         else
                         {
-                            
+                            if (auxiliar == 1)
+                            {
+                                auxiliar = 0;
+
+                            }
+
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
@@ -410,6 +918,7 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
@@ -424,12 +933,16 @@ namespace IPC2
                         if (verificarco(i, y, color) == true)
                         {
                             prueb.AddLast(fichacolor(i, y, color));
-                            
+
 
                         }
                         else
                         {
-                            
+                            if (auxiliar == 1)
+                            {
+                                auxiliar = 0;
+
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
@@ -448,18 +961,26 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
-        public void Dabajo  (int x, int y, string color)
+        public void Dabajo(int x, int y, string color)
         {
+            int po = 0;
             foreach (Ficha prueba in fichita)
             {
+                if (po == 1)
+                {
+                    po = 0;
+                    break;
+                }
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
                     while (true)
                     {
-                        if(x> 8 && y > 8) {
+                        if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
+                        {
                             break;
                         }
 
@@ -470,62 +991,81 @@ namespace IPC2
                         }
                         else
                         {
-
+                            if (auxiliar == 1)
+                            {
+                                prueb = new LinkedList<string>();
+                                auxiliar = 0;
+                                po = 1;
+                                break;
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
                                 {
                                     posiciones.AddLast(pru);
                                 }
+                                if (prueb.Count != 0)
+                                {
+                                    po = 1;
+                                    break;
+                                }
+
                             }
                             Cont = 0;
                             prueb = new LinkedList<string>();
-                            break;
+
                         }
                         x++;
                         y++;
                     }
-                //    for (int i = y - 1; i >= 1; i--)
-                //    {
-                //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
-                //        if (verificarco(x, i, color) == true)
-                //        {
-                //            prueb.AddLast(fichacolor(x, i, color));
+                    //    for (int i = y - 1; i >= 1; i--)
+                    //    {
+                    //        Response.Write("<script>console.log('" + x.ToString() + i.ToString() + color + "')</script>");
+                    //        if (verificarco(x, i, color) == true)
+                    //        {
+                    //            prueb.AddLast(fichacolor(x, i, color));
 
-                //        }
-                //        else
-                //        {
+                    //        }
+                    //        else
+                    //        {
 
-                //            if (Cont == 1)
-                //            {
-                //                foreach (string pru in prueb)
-                //                {
-                //                    posiciones.AddLast(pru);
-                //                }
-                //            }
-                //            Cont = 0;
-                //            prueb = new LinkedList<string>();
-                //            break;
-                //        }
+                    //            if (Cont == 1)
+                    //            {
+                    //                foreach (string pru in prueb)
+                    //                {
+                    //                    posiciones.AddLast(pru);
+                    //                }
+                    //            }
+                    //            Cont = 0;
+                    //            prueb = new LinkedList<string>();
+                    //            break;
+                    //        }
 
-                //    }
+                    //    }
                 }
             }
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
         public void Iabajo(int x, int y, string color)
         {
+            int po = 0;
             foreach (Ficha prueba in fichita)
             {
+                if (po == 1)
+                {
+                    po = 0;
+                    break;
+                }
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
                     while (true)
                     {
-                        if (x > 8 && y > 8)
+                        if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
                         {
                             break;
                         }
@@ -537,6 +1077,13 @@ namespace IPC2
                         }
                         else
                         {
+                            if (auxiliar == 1)
+                            {
+                                prueb = new LinkedList<string>();
+                                auxiliar = 0;
+                                po = 1;
+                                break;
+                            }
 
                             if (Cont == 1)
                             {
@@ -544,10 +1091,15 @@ namespace IPC2
                                 {
                                     posiciones.AddLast(pru);
                                 }
+                                if (prueb.Count != 0)
+                                {
+                                    po = 1;
+                                    break;
+                                }
                             }
                             Cont = 0;
                             prueb = new LinkedList<string>();
-                            break;
+
                         }
                         x--;
                         y++;
@@ -581,40 +1133,70 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
         public void Darriba(int x, int y, string color)
         {
+            int po = 0;
             foreach (Ficha prueba in fichita)
             {
+                if (po == 1)
+                {
+                    po = 0;
+                    break;
+                }
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
                     while (true)
                     {
-                        if (x > 8 && y > 8)
+                        if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
                         {
                             break;
                         }
 
                         if (verificarco(x, y, color) == true)
                         {
-                            prueb.AddLast(fichacolor(x, y, color));
+
+                            if (fichacolor(x, y, color) != "vacio")
+                            {
+                                prueb.AddLast(fichacolor(x, y, color));
+                            }
+                            else
+                            {
+                                prueb = new LinkedList<string>();
+                                prueb.Clear();
+                                po = 1;
+                                break;
+                            }
 
                         }
                         else
                         {
-
+                            if (auxiliar == 1)
+                            {
+                                auxiliar = 0;
+                                po = 1;
+                                break;
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
                                 {
+
                                     posiciones.AddLast(pru);
                                 }
+                                if (prueb.Count != 0)
+                                {
+                                    po = 1;
+                                    break;
+                                }
                             }
+
                             Cont = 0;
                             prueb = new LinkedList<string>();
-                            break;
+
                         }
                         x++;
                         y--;
@@ -648,40 +1230,59 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
         public void Iarriba(int x, int y, string color)
         {
+            int po = 0;
             foreach (Ficha prueba in fichita)
             {
+                if (po == 1)
+                {
+                    po = 0;
+                    break;
+                }
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
                     while (true)
                     {
-                        if (x > 8 && y > 8)
+                        if ((x > 8 && y > 8) || (x < 1 && y < 1) || (x > 8 && y < 1) || (x < 1 && y > 8))
                         {
                             break;
                         }
 
                         if (verificarco(x, y, color) == true)
                         {
+
                             prueb.AddLast(fichacolor(x, y, color));
 
                         }
                         else
                         {
-
+                            if (auxiliar == 1)
+                            {
+                                prueb = new LinkedList<string>();
+                                auxiliar = 0;
+                                po = 1;
+                                break;
+                            }
                             if (Cont == 1)
                             {
                                 foreach (string pru in prueb)
                                 {
                                     posiciones.AddLast(pru);
                                 }
+                                if (prueb.Count != 0)
+                                {
+                                    po = 1;
+                                    break;
+                                }
                             }
                             Cont = 0;
                             prueb = new LinkedList<string>();
-                            break;
+
                         }
                         x--;
                         y--;
@@ -715,29 +1316,30 @@ namespace IPC2
             cambiar(color);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
+            prueb = new LinkedList<string>();
 
         }
 
         public string buscar(string color)
         {
-            string casillas="Posiciones posibles:";
+            string casillas = "Posiciones posibles:";
             int y;
             int x;
             foreach (Ficha prueba in fichita)
             {
                 if (prueba.Getcolor().Equals("vacio"))
                 {
-                    if (colorcerca(prueba.Getx(), prueba.Gety() + 1, color)==true)
+                    if (colorcerca(prueba.Getx(), prueba.Gety() + 1, color) == true)
                     {
                         y = prueba.Gety() + 1;
                         while (true)
                         {
-                            
-                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8 )
+
+                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8)
                             {
-                                
-                                Response.Write("<script>console.log('aqui esta tu concha abajo" + prueba.Getid() +prueba.Getx()+" "+y+ prueba.Getcolor()+ "')</script>");
-                                casillas += " "+prueba.Getid();
+
+                                Response.Write("<script>console.log('aqui esta tu concha abajo" + prueba.Getid() + prueba.Getx() + " " + y + prueba.Getcolor() + "')</script>");
+                                casillas += " " + prueba.Getid();
                                 break;
                             }
                             if (y >= 8)
@@ -748,13 +1350,13 @@ namespace IPC2
 
                         }
                     }
-                    if (colorcerca(prueba.Getx()+1, prueba.Gety(), color) == true)
+                    if (colorcerca(prueba.Getx() + 1, prueba.Gety(), color) == true)
                     {
-                        x = prueba.Getx()+1;
+                        x = prueba.Getx() + 1;
                         while (true)
                         {
-                            
-                            if (verificarco2(x, prueba.Gety(), color) == false && x >= 1 && x <= 8 )
+
+                            if (verificarco2(x, prueba.Gety(), color) == false && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha derecha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -767,13 +1369,13 @@ namespace IPC2
                             x++;
                         }
                     }
-                    if (colorcerca(prueba.Getx()-1, prueba.Gety(), color) == true)
+                    if (colorcerca(prueba.Getx() - 1, prueba.Gety(), color) == true)
                     {
                         x = prueba.Getx() - 1;
                         while (true)
                         {
-                            
-                            if (verificarco2(x, prueba.Gety(), color) == false && x>=1 && x<=8 )
+
+                            if (verificarco2(x, prueba.Gety(), color) == false && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha izquierda" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -792,8 +1394,8 @@ namespace IPC2
                         y = prueba.Gety() - 1;
                         while (true)
                         {
-                            
-                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8 )
+
+                            if (verificarco2(prueba.Getx(), y, color) == false && y >= 1 && y <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha arriba" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -806,13 +1408,13 @@ namespace IPC2
                             y--;
                         }
                     }
-                    if (colorcerca(prueba.Getx()+1, prueba.Gety() + 1, color) == true)
+                    if (colorcerca(prueba.Getx() + 1, prueba.Gety() + 1, color) == true)
                     {
                         x = prueba.Getx() + 1;
                         y = prueba.Gety() + 1;
                         while (true)
                         {
-                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -826,13 +1428,13 @@ namespace IPC2
                             y++;
                         }
                     }
-                    if (colorcerca(prueba.Getx()-1, prueba.Gety() + 1, color) == true)
+                    if (colorcerca(prueba.Getx() - 1, prueba.Gety() + 1, color) == true)
                     {
                         x = prueba.Getx() - 1;
                         y = prueba.Gety() + 1;
                         while (true)
                         {
-                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x>=1 && x<=8)
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -846,13 +1448,13 @@ namespace IPC2
                             y++;
                         }
                     }
-                    if (colorcerca(prueba.Getx()-1, prueba.Gety() - 1, color) == true)
+                    if (colorcerca(prueba.Getx() - 1, prueba.Gety() - 1, color) == true)
                     {
                         x = prueba.Getx() - 1;
                         y = prueba.Gety() - 1;
                         while (true)
                         {
-                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
@@ -866,19 +1468,19 @@ namespace IPC2
                             y--;
                         }
                     }
-                    if (colorcerca(prueba.Getx()+1, prueba.Gety() -1 , color) == true)
+                    if (colorcerca(prueba.Getx() + 1, prueba.Gety() - 1, color) == true)
                     {
                         x = prueba.Getx() + 1;
                         y = prueba.Gety() - 1;
                         while (true)
                         {
-                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8 )
+                            if (verificarco2(x, y, color) == false && y >= 1 && y <= 8 && x >= 1 && x <= 8)
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 break;
                             }
-                            if(x>=8 || y >= 8 ||x<=1 || y<=1)
+                            if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
                             {
                                 break;
                             }
@@ -889,16 +1491,16 @@ namespace IPC2
                 }
             }
             return casillas;
-            
+
         }
 
-        public bool colorcerca(int x,int y,string color)
+        public bool colorcerca(int x, int y, string color)
         {
             foreach (Ficha prueba in fichita)
             {
-                if(prueba.Getx()==x && prueba.Gety() == y)
+                if (prueba.Getx() == x && prueba.Gety() == y)
                 {
-                    if (prueba.Getcolor() != color && prueba.Getcolor()!="vacio")
+                    if (prueba.Getcolor() != color && prueba.Getcolor() != "vacio")
                     {
                         Response.Write("<script>console.log('asdhaksdhaks" + x.ToString() + y.ToString() + color + "')</script>");
                         return true;
@@ -914,35 +1516,58 @@ namespace IPC2
 
         public bool verificarco(int x, int y, string color)
         {
+
             bool p = false;
             foreach (Ficha prueba in fichita)
             {
-                if(prueba.Getx()==x && prueba.Gety() == y)
+                if (prueba.Getx() == x && prueba.Gety() == y)
                 {
                     if (prueba.Getcolor().Equals(color))
                     {
                         p = false;
                         Cont++;
-                        encontrado = 1;
+                        ayuda++;
+                        encon++;
                         vacios.AddLast(prueba.Getid());
-                        return p;
+                        break;
+
                     }
-                    else if(prueba.Getcolor()=="vacio")
+                    else if (prueba.Getcolor() == "vacio")
                     {
                         p = false;
-                        
-                        return p;
+
+                        l = 0;
+                        if (contador3 != 0 || encon <= 1)
+                        {
+                            encon = 0;
+                            auxiliar = 1;
+                            contador3 = 0;
+                        }
+
+
+                        break;
+
+
 
                     }
                     else
                     {
                         p = true;
-                        
+                        if (contador3 != 0 && (auxiliar == 1 || Cont == 0))
+                        {
+                            contador3 = 0;
+                        }
+                        else
+                        {
+                            contador3++;
+                        }
+                        break;
+
                         return p;
                     }
                 }
             }
-            
+
             return p;
         }
 
@@ -954,16 +1579,17 @@ namespace IPC2
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
 
-                    if (color.Equals(prueba.Getcolor()) && prueba.Getcolor()!="vacio")
+                    if (color.Equals(prueba.Getcolor()) && prueba.Getcolor() != "vacio")
                     {
 
-                        Response.Write("<script>console.log('aqui esta tu concha abajo prueba: " + "id: "+prueba.Getid() + "pos x: "+prueba.Getx() + "posy: " + y + prueba.Getcolor() + "')</script>");
+                        Response.Write("<script>console.log('aqui esta tu concha abajo prueba: " + "id: " + prueba.Getid() + "pos x: " + prueba.Getx() + "posy: " + y + prueba.Getcolor() + "')</script>");
                         p = false;
                         Cont++;
 
 
                         return p;
-                    }else if (color != prueba.Getcolor())
+                    }
+                    else if (color != prueba.Getcolor())
                     {
                         p = true;
                         return p;
@@ -977,15 +1603,15 @@ namespace IPC2
             return p;
         }
 
-        public string fichacolor(int x, int y,string color)
+        public string fichacolor(int x, int y, string color)
         {
             foreach (Ficha prueba in fichita)
             {
-                if(prueba.Getx()==x && prueba.Gety() == y)
+                if (prueba.Getx() == x && prueba.Gety() == y)
                 {
-                    if (prueba.Getcolor() == color)
+                    if (prueba.Getcolor() == "vacio")
                     {
-                        
+                        return "vacio";
                     }
                     return prueba.Getid();
                 }
@@ -993,53 +1619,59 @@ namespace IPC2
             return "";
         }
 
-        public void cambiar(string color){
-            if (color == "blanco" && vacios.Count==0)
+        public void cambiar(string color)
+        {
+            if (color == "blanco" && vacios.Count == 0)
             {
                 ViewState["turno"] = 1;
-            } else if (color == "negro" && vacios.Count == 0 )
+            }
+            else if (color == "negro" && vacios.Count == 0)
             {
                 ViewState["turno"] = 0;
             }
             foreach (string o in posiciones)
             {
+
                 Button c1 = FindControl(o) as Button;
-               
+
                 foreach (string vac in vacios)
                 {
                     Button c2 = FindControl(vac) as Button;
+
                     if (color == "blanco")
                     {
-                        
-                        if (c2.BackColor.Name=="White")
+
+                        if (c2.BackColor.Name == "White")
                         {
                             ViewState["turno"] = 1;
                             c1.BackColor = System.Drawing.Color.White;
                             guardarfichas(o, 1);
-                            encontrado = 0;
+
                         }
                     }
                     else if (color == "negro")
                     {
-                        
-                        if (c2.BackColor.Name=="Black")
+
+                        if (c2.BackColor.Name == "Black")
                         {
                             ViewState["turno"] = 0;
                             c1.BackColor = System.Drawing.Color.Black;
                             guardarfichas(o, 0);
-                            encontrado = 0;
+
                         }
                     }
                 }
-                    
-                    
-                
+
+
+
+
+
             }
         }
         protected void a1_Click(object sender, EventArgs e)
         {
             pruebadiego("a1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1063,7 +1695,7 @@ namespace IPC2
         protected void b1_Click(object sender, EventArgs e)
         {
             pruebadiego("b1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1087,7 +1719,7 @@ namespace IPC2
         protected void c1_Click(object sender, EventArgs e)
         {
             pruebadiego("c1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1111,7 +1743,7 @@ namespace IPC2
         protected void d1_Click(object sender, EventArgs e)
         {
             pruebadiego("d1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1135,7 +1767,7 @@ namespace IPC2
         protected void e1_Click(object sender, EventArgs e)
         {
             pruebadiego("e1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1159,7 +1791,7 @@ namespace IPC2
         protected void f1_Click(object sender, EventArgs e)
         {
             pruebadiego("f1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1183,7 +1815,7 @@ namespace IPC2
         protected void g1_Click(object sender, EventArgs e)
         {
             pruebadiego("g1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1207,7 +1839,7 @@ namespace IPC2
         protected void h1_Click(object sender, EventArgs e)
         {
             pruebadiego("h1", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1231,7 +1863,7 @@ namespace IPC2
         protected void a2_Click(object sender, EventArgs e)
         {
             pruebadiego("a2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1255,7 +1887,7 @@ namespace IPC2
         protected void b2_Click(object sender, EventArgs e)
         {
             pruebadiego("b2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1279,7 +1911,7 @@ namespace IPC2
         protected void c2_Click(object sender, EventArgs e)
         {
             pruebadiego("c2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1303,7 +1935,7 @@ namespace IPC2
         protected void d2_Click(object sender, EventArgs e)
         {
             pruebadiego("d2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1327,7 +1959,7 @@ namespace IPC2
         protected void e2_Click(object sender, EventArgs e)
         {
             pruebadiego("e2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1351,7 +1983,7 @@ namespace IPC2
         protected void f2_Click(object sender, EventArgs e)
         {
             pruebadiego("f2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1375,7 +2007,7 @@ namespace IPC2
         protected void g2_Click(object sender, EventArgs e)
         {
             pruebadiego("g2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1399,7 +2031,7 @@ namespace IPC2
         protected void h2_Click(object sender, EventArgs e)
         {
             pruebadiego("h2", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1423,7 +2055,7 @@ namespace IPC2
         protected void a3_Click(object sender, EventArgs e)
         {
             pruebadiego("a3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1447,7 +2079,7 @@ namespace IPC2
         protected void b3_Click(object sender, EventArgs e)
         {
             pruebadiego("b3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1471,7 +2103,7 @@ namespace IPC2
         protected void c3_Click(object sender, EventArgs e)
         {
             pruebadiego("c3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1495,7 +2127,7 @@ namespace IPC2
         protected void d3_Click(object sender, EventArgs e)
         {
             pruebadiego("d3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1519,7 +2151,7 @@ namespace IPC2
         protected void e3_Click(object sender, EventArgs e)
         {
             pruebadiego("e3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1536,15 +2168,15 @@ namespace IPC2
 
                 }
             }
-                pruebadiego2("e3", (int)ViewState["turno"]);
-                mov();
-            
+            pruebadiego2("e3", (int)ViewState["turno"]);
+            mov();
+
         }
 
         protected void f3_Click(object sender, EventArgs e)
         {
             pruebadiego("f3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1568,7 +2200,7 @@ namespace IPC2
         protected void g3_Click(object sender, EventArgs e)
         {
             pruebadiego("g3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1592,7 +2224,7 @@ namespace IPC2
         protected void h3_Click(object sender, EventArgs e)
         {
             pruebadiego("h3", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1616,7 +2248,7 @@ namespace IPC2
         protected void a4_Click(object sender, EventArgs e)
         {
             pruebadiego("a4", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1640,7 +2272,7 @@ namespace IPC2
         protected void b4_Click(object sender, EventArgs e)
         {
             pruebadiego("b4", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1664,7 +2296,7 @@ namespace IPC2
         protected void c4_Click(object sender, EventArgs e)
         {
             pruebadiego("c4", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1688,7 +2320,7 @@ namespace IPC2
         protected void d4_Click(object sender, EventArgs e)
         {
             pruebadiego("d4", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1712,7 +2344,7 @@ namespace IPC2
         protected void e4_Click(object sender, EventArgs e)
         {
             pruebadiego("e4", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1735,8 +2367,8 @@ namespace IPC2
 
         protected void f4_Click(object sender, EventArgs e)
         {
-            pruebadiego("f4",Color2());
-            if (contador2 >= 1)
+            pruebadiego("f4", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1759,15 +2391,15 @@ namespace IPC2
 
         protected void g4_Click(object sender, EventArgs e)
         {
-            pruebadiego("g4",Color2());
-            if (contador2 >= 1)
+            pruebadiego("g4", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
                     ViewState["bandera"] = 0;
                     ViewState["t"] = 1;
                     g4.BackColor = System.Drawing.Color.White;
-                    
+
 
                 }
                 else
@@ -1775,7 +2407,7 @@ namespace IPC2
                     ViewState["bandera"] = 1;
                     ViewState["t"] = 1;
                     g4.BackColor = System.Drawing.Color.Black;
-                    
+
                 }
             }
             pruebadiego2("g4", (int)ViewState["turno"]);
@@ -1784,8 +2416,8 @@ namespace IPC2
 
         protected void h4_Click(object sender, EventArgs e)
         {
-            pruebadiego("h4",Color2());
-            if (contador2 >= 1)
+            pruebadiego("h4", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1809,7 +2441,7 @@ namespace IPC2
         protected void a5_Click(object sender, EventArgs e)
         {
             pruebadiego("a5", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1833,7 +2465,7 @@ namespace IPC2
         protected void b5_Click(object sender, EventArgs e)
         {
             pruebadiego("b5", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1857,15 +2489,15 @@ namespace IPC2
         protected void c5_Click(object sender, EventArgs e)
         {
             pruebadiego("c5", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
                     ViewState["bandera"] = 0;
                     ViewState["t"] = 1;
                     c5.BackColor = System.Drawing.Color.White;
-                    
-                    
+
+
 
                 }
                 else
@@ -1873,13 +2505,13 @@ namespace IPC2
                     ViewState["bandera"] = 1;
                     ViewState["t"] = 1;
                     c5.BackColor = System.Drawing.Color.Black;
-                    
+
 
 
                 }
-                
+
             }
-            
+
             pruebadiego2("c5", (int)ViewState["turno"]);
             mov();
         }
@@ -1887,7 +2519,7 @@ namespace IPC2
         protected void d5_Click(object sender, EventArgs e)
         {
             pruebadiego("d5", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1911,7 +2543,7 @@ namespace IPC2
         protected void e5_Click(object sender, EventArgs e)
         {
             pruebadiego("e5", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1934,8 +2566,8 @@ namespace IPC2
 
         protected void f5_Click(object sender, EventArgs e)
         {
-            pruebadiego("f5",Color2());
-            if (contador2 >= 1)
+            pruebadiego("f5", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1958,8 +2590,8 @@ namespace IPC2
 
         protected void g5_Click(object sender, EventArgs e)
         {
-            pruebadiego("g5",Color2());
-            if (contador2 >= 1)
+            pruebadiego("g5", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -1982,8 +2614,8 @@ namespace IPC2
 
         protected void h5_Click(object sender, EventArgs e)
         {
-            pruebadiego("h5",Color2());
-            if (contador2 >= 1)
+            pruebadiego("h5", Color2());
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2007,7 +2639,7 @@ namespace IPC2
         protected void a6_Click(object sender, EventArgs e)
         {
             pruebadiego("a6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2031,7 +2663,7 @@ namespace IPC2
         protected void b6_Click(object sender, EventArgs e)
         {
             pruebadiego("b6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2055,7 +2687,7 @@ namespace IPC2
         protected void c6_Click(object sender, EventArgs e)
         {
             pruebadiego("c6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2079,7 +2711,7 @@ namespace IPC2
         protected void d6_Click(object sender, EventArgs e)
         {
             pruebadiego("d6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2103,8 +2735,8 @@ namespace IPC2
         protected void e6_Click(object sender, EventArgs e)
         {
             pruebadiego("e6", Color2());
-            
-            if (contador2 >= 1)
+
+            if (contador2 >= 1 && contador3 >= 1)
             {
 
                 if (Color() == 1)
@@ -2129,7 +2761,7 @@ namespace IPC2
         protected void f6_Click(object sender, EventArgs e)
         {
             pruebadiego("f6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2145,7 +2777,7 @@ namespace IPC2
                     f6.BackColor = System.Drawing.Color.Black;
 
                 }
-                
+
             }
             pruebadiego2("f6", (int)ViewState["turno"]);
             mov();
@@ -2154,7 +2786,7 @@ namespace IPC2
         protected void g6_Click(object sender, EventArgs e)
         {
             pruebadiego("g6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2178,7 +2810,7 @@ namespace IPC2
         protected void h6_Click(object sender, EventArgs e)
         {
             pruebadiego("h6", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2202,7 +2834,7 @@ namespace IPC2
         protected void a7_Click(object sender, EventArgs e)
         {
             pruebadiego("a7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2226,7 +2858,7 @@ namespace IPC2
         protected void b7_Click(object sender, EventArgs e)
         {
             pruebadiego("b7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2240,7 +2872,7 @@ namespace IPC2
                     ViewState["bandera"] = 1;
                     ViewState["t"] = 1;
                     b7.BackColor = System.Drawing.Color.Black;
-               
+
                 }
             }
             pruebadiego2("b7", (int)ViewState["turno"]);
@@ -2250,7 +2882,7 @@ namespace IPC2
         protected void c7_Click(object sender, EventArgs e)
         {
             pruebadiego("c7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2274,7 +2906,7 @@ namespace IPC2
         protected void d7_Click(object sender, EventArgs e)
         {
             pruebadiego("d7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2298,7 +2930,7 @@ namespace IPC2
         protected void e7_Click(object sender, EventArgs e)
         {
             pruebadiego("e7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2322,7 +2954,7 @@ namespace IPC2
         protected void f7_Click(object sender, EventArgs e)
         {
             pruebadiego("f7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2346,7 +2978,7 @@ namespace IPC2
         protected void g7_Click(object sender, EventArgs e)
         {
             pruebadiego("g7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2370,7 +3002,7 @@ namespace IPC2
         protected void h7_Click(object sender, EventArgs e)
         {
             pruebadiego("h7", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2393,7 +3025,7 @@ namespace IPC2
         protected void a8_Click(object sender, EventArgs e)
         {
             pruebadiego("a8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2417,7 +3049,7 @@ namespace IPC2
         protected void b8_Click(object sender, EventArgs e)
         {
             pruebadiego("b8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2441,7 +3073,7 @@ namespace IPC2
         protected void c8_Click(object sender, EventArgs e)
         {
             pruebadiego("c8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2465,7 +3097,7 @@ namespace IPC2
         protected void d8_Click(object sender, EventArgs e)
         {
             pruebadiego("d8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2489,7 +3121,7 @@ namespace IPC2
         protected void e8_Click(object sender, EventArgs e)
         {
             pruebadiego("e8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2513,7 +3145,7 @@ namespace IPC2
         protected void f8_Click(object sender, EventArgs e)
         {
             pruebadiego("f8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2537,7 +3169,7 @@ namespace IPC2
         protected void g8_Click(object sender, EventArgs e)
         {
             pruebadiego("g8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2561,7 +3193,7 @@ namespace IPC2
         protected void h8_Click(object sender, EventArgs e)
         {
             pruebadiego("h8", Color2());
-            if (contador2 >= 1)
+            if (contador2 >= 1 && contador3 >= 1)
             {
                 if (Color() == 1)
                 {
@@ -2586,25 +3218,26 @@ namespace IPC2
         {
             int re = 1;
 
-            if (ViewState["click"] != null) {
-                
+            if (ViewState["click"] != null)
+            {
+
                 if ((int)ViewState["click"] == 1)
                 {
                     ViewState["click"] = 0;
                     re = (int)ViewState["click"];
-                    
+
 
                 }
                 else if ((int)ViewState["click"] == 0)
                 {
                     ViewState["click"] = 1;
                     re = (int)ViewState["click"];
-                    
+
 
 
                 }
                 return re;
-            
+
 
             }
             else
@@ -2613,28 +3246,28 @@ namespace IPC2
                 re = (int)ViewState["click"];
                 return re;
             }
-                
-            }
+
+        }
 
         public int Color2()
         {
-            
+
 
             if (ViewState["click2"] != null)
             {
 
-                if ((int)ViewState["click2"] == 1 && (int)ViewState["bandera"]!=1)
+                if ((int)ViewState["click2"] == 1 && (int)ViewState["bandera"] != 1)
                 {
                     ViewState["click2"] = 0;
                     ViewState["re"] = (int)ViewState["click2"];
-                    
+
 
                 }
                 else if ((int)ViewState["click2"] == 0 && (int)ViewState["bandera"] != 0)
                 {
                     ViewState["click2"] = 1;
                     ViewState["re"] = (int)ViewState["click2"];
-                    
+
                 }
                 return (int)ViewState["re"];
 
@@ -2644,9 +3277,9 @@ namespace IPC2
             {
                 ViewState["click2"] = 1;
                 ViewState["re"] = 1;
-                ViewState["bandera"]= 1;
+                ViewState["bandera"] = 1;
                 return (int)ViewState["re"];
-                
+
             }
 
         }
@@ -2664,11 +3297,11 @@ namespace IPC2
             XmlDocument doc = new XmlDocument();
             XmlElement raiz = doc.CreateElement("Tablero");
             doc.AppendChild(raiz);
-            
 
-            
 
-            for(int i=1; i <= 8; i++)
+
+
+            for (int i = 1; i <= 8; i++)
             {
                 string a = "a" + i.ToString();
                 string b = "b" + i.ToString();
@@ -2687,9 +3320,10 @@ namespace IPC2
                 Button c7 = FindControl(g) as Button;
                 Button c8 = FindControl(h) as Button;
 
-                if (c1!=null)
+                if (c1 != null)
                 {
-                    if (c1.BackColor.Name == "White") {
+                    if (c1.BackColor.Name == "White")
+                    {
                         XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
@@ -2706,7 +3340,8 @@ namespace IPC2
                         ficha.AppendChild(columna);
 
                     }
-                    else if (c1.BackColor.Name == "Black"){
+                    else if (c1.BackColor.Name == "Black")
+                    {
                         XmlElement ficha = doc.CreateElement("ficha");
                         raiz.AppendChild(ficha);
 
@@ -2722,7 +3357,7 @@ namespace IPC2
                         columna.AppendChild(doc.CreateTextNode("A"));
                         ficha.AppendChild(columna);
                     }
-                    
+
                 }
                 if (c2 != null)
                 {
@@ -2800,7 +3435,7 @@ namespace IPC2
                         ficha.AppendChild(columna);
                     }
 
-                    
+
                 }
                 if (c4 != null)
                 {
@@ -3036,24 +3671,114 @@ namespace IPC2
                 }
                 string columnaF = columna.ToLower();
                 ficha = columnaF + fila;
+
                 Button Nid = FindControl(ficha) as Button;
                 if (cf.Equals("Negro"))
                 {
                     //a1.BackColor = System.Drawing.Color.White;
                     Nid.BackColor = System.Drawing.Color.Black;
+                    guardarfichas(ficha, 0);
                 }
                 else if (cf.Equals("Blanco"))
                 {
                     //a1.BackColor = System.Drawing.Color.White;
                     Nid.BackColor = System.Drawing.Color.White;
+                    guardarfichas(ficha, 1);
+                }
+            }
+
+
+        }
+        public void verificarcargar(string id)
+        {
+            int diego = 1;
+            int es = 1;
+            int puto = 1;
+            int culero = 1;
+            contador2 = 0;
+
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getid().Equals(id))
+                {
+
+
+                    diego = prueba.Getx() + 1;
+                    es = prueba.Gety() + 1;
+                    puto = prueba.Getx() - 1;
+                    culero = prueba.Gety() - 1;
+                    if (diego <= 9 && es <= 9 && puto >= 0 && culero >= 0)
+                    {
+
+                        verificerca(prueba.Getx(), es, prueba.Getcolor());
+                        verificerca(diego, es, prueba.Getcolor());
+                        verificerca(puto, es, prueba.Getcolor());
+                        verificerca(diego, prueba.Gety(), prueba.Getcolor());
+                        verificerca(puto, prueba.Gety(), prueba.Getcolor());
+                        verificerca(prueba.Getx(), culero, prueba.Getcolor());
+                        verificerca(puto, culero, prueba.Getcolor());
+                        verificerca(diego, culero, prueba.Getcolor());
+
+
+
+
+                    }
+
+
+
+
+
                 }
             }
         }
-        
+        private void verificerca(int x, int y, string color)
+        {
+
+
+            foreach (Ficha prueba in fichita)
+            {
+                if (prueba.Getx() == x && prueba.Gety() == y  && prueba.Getocupado() == true)
+                {
+                    if (prueba.Getcolor().Equals("blanco"))
+                    {
+
+                        contador2++;
+
+                    }
+                    else if (prueba.Getcolor().Equals("negro"))
+                    {
+                        contador2++;
+                    }
+                    else
+                    {
+                        contador2 = 0;
+
+                    }
+
+                }
 
 
 
+
+
+            }
+
+        }
+        public void verdes()
+        {
+            foreach (Ficha prueba in fichita)
+            {
+                verificarcargar(prueba.Getid());
+                if (contador2 == 0)
+                {
+                    Button chev = FindControl(prueba.Getid()) as Button;
+                    chev.BackColor = System.Drawing.Color.ForestGreen;
+                }
+            }
+
+        }
     }
-   
+
 }
+
     

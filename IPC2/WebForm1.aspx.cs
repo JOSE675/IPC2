@@ -33,7 +33,9 @@ namespace IPC2
             
         }
 
-        
-        
+        protected void Single_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

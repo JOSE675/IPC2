@@ -25,8 +25,9 @@
             <asp:TextBox ID="Pass" runat="server"></asp:TextBox>
             <br />
             <br />
-            <br />
             <asp:Button ID="Button1" runat="server" Text="Iniciar sesion" BackColor="#FF6600" OnClick="Button1_Click" />
+            <br />
+            <asp:Button ID="Button2" runat="server" BackColor="#FF6600" ForeColor="Black" OnClick="Button2_Click" Text="Registrarse" Width="112px" />
         </div>
     </form>
 </body>

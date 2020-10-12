@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -18,10 +20,16 @@ namespace IPC2
         int l = 0;
         int encon = 0;
         int fin = 0;
+        int poto = 0;
+        string nombre;
+        string apellido;
+        string nombres;
+
         LinkedList<string> vacios = new LinkedList<string>();
         LinkedList<string> prueb = new LinkedList<string>();
         LinkedList<Ficha> fichita = new LinkedList<Ficha>();
         LinkedList<string> posiciones = new LinkedList<string>();
+        LinkedList<string> maquina = new LinkedList<string>();
         bool quiza = false;
         public int contador = 0;
         public int contador2 = 0;
@@ -32,6 +40,7 @@ namespace IPC2
         {
             ViewState["vali"] = ViewState["vali"];
             contador++;
+            
             if (ViewState["vali"] == null)
             {
                 d4.BackColor = System.Drawing.Color.White;
@@ -42,6 +51,9 @@ namespace IPC2
                 ViewState["turno"] = 0;
                 ViewState["verifi"] = -1;
                 ViewState["t"] = 0;
+                ViewState["blancas"] = 0;
+                ViewState["negras"] = 0;
+                nombre = Login.nombre;
             }
             if (WebForm1.num == 1)
             {
@@ -50,6 +62,7 @@ namespace IPC2
                 WebForm1.num = 0;
             }
             guardarfichas("", (int)ViewState["turno"]);
+
 
 
 
@@ -126,6 +139,7 @@ namespace IPC2
         }
         public void mov()
         {
+            
             if ((int)ViewState["turno"] == 0)
             {
                 string co = buscar("blanco");
@@ -158,7 +172,40 @@ namespace IPC2
             }
             if (fin == 2)
             {
-                Response.Write("<script>console.log('Partida terminada!')</script>");
+                int b = 0;
+                int n = 0;
+                int v = 0;
+                foreach (Ficha prueba in fichita)
+                {
+                    if (prueba.Getcolor() == "blanco")
+                    {
+                        b++;
+                    }
+                    else if (prueba.Getcolor() == "negro")
+                    {
+                        n++;
+                    }
+                    else
+                    {
+                        v++;
+                    }
+                }
+                if (b > n)
+                {
+                    b = b + v;
+                    Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                }
+                else
+                {
+                    n = n + v;
+                    Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                }
+
+
+            }
+            if (fin == 1)
+            {
+                mov();
             }
         }
         public void guardarID(int x, int y, bool ocupado, string id, string color)
@@ -307,11 +354,13 @@ namespace IPC2
                 }
             }
 
+
         }
         public void verarriba(int x, int y, string color)
         {
             int l = 0;
             contador3 = 0;
+            auxiliar = 0;
             if (ayuda == 0)
             {
                 foreach (Ficha prueba in fichita)
@@ -353,6 +402,7 @@ namespace IPC2
         }
         public void verabajo(int x, int y, string color)
         {
+            auxiliar = 0;
             int l = 0;
             contador3 = 0;
             if (ayuda == 0)
@@ -399,6 +449,7 @@ namespace IPC2
         }
         public void verDer(int x, int y, string color)
         {
+            auxiliar = 0;
             int l = 0;
             contador3 = 0;
             if (ayuda == 0)
@@ -444,6 +495,7 @@ namespace IPC2
         }
         public void verIzq(int x, int y, string color)
         {
+            auxiliar = 0;
             int l = 0;
             contador3 = 0;
             if (ayuda == 0)
@@ -489,6 +541,7 @@ namespace IPC2
         }
         public void verabajoD(int x, int y, string color)
         {
+            auxiliar = 0;
             int po = 0;
             x = x + 1;
             y = y + 1;
@@ -552,6 +605,7 @@ namespace IPC2
         }
         public void verabajoI(int x, int y, string color)
         {
+            auxiliar = 0;
             int po = 0;
             x = x - 1;
             y = y + 1;
@@ -615,6 +669,7 @@ namespace IPC2
         }
         public void verarribaD(int x, int y, string color)
         {
+            auxiliar = 0;
             int po = 0;
             x = x + 1;
             y = y - 1;
@@ -679,6 +734,7 @@ namespace IPC2
         }
         public void verarribaI(int x, int y, string color)
         {
+            auxiliar = 0;
             int po = 0;
             x = x - 1;
             y = y - 1;
@@ -1340,6 +1396,7 @@ namespace IPC2
 
                                 Response.Write("<script>console.log('aqui esta tu concha abajo" + prueba.Getid() + prueba.Getx() + " " + y + prueba.Getcolor() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (y >= 8)
@@ -1349,7 +1406,9 @@ namespace IPC2
                             y++;
 
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() + 1, prueba.Gety(), color) == true)
                     {
                         x = prueba.Getx() + 1;
@@ -1360,6 +1419,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha derecha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8)
@@ -1368,7 +1428,9 @@ namespace IPC2
                             }
                             x++;
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() - 1, prueba.Gety(), color) == true)
                     {
                         x = prueba.Getx() - 1;
@@ -1379,6 +1441,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha izquierda" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x <= 1)
@@ -1387,7 +1450,9 @@ namespace IPC2
                             }
                             x--;
                         }
+
                     }
+                    poto = 0;
 
                     if (colorcerca(prueba.Getx(), prueba.Gety() - 1, color) == true)
                     {
@@ -1399,6 +1464,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha arriba" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (y <= 1)
@@ -1407,7 +1473,9 @@ namespace IPC2
                             }
                             y--;
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() + 1, prueba.Gety() + 1, color) == true)
                     {
                         x = prueba.Getx() + 1;
@@ -1418,6 +1486,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1427,7 +1496,9 @@ namespace IPC2
                             x++;
                             y++;
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() - 1, prueba.Gety() + 1, color) == true)
                     {
                         x = prueba.Getx() - 1;
@@ -1438,6 +1509,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1447,7 +1519,9 @@ namespace IPC2
                             x--;
                             y++;
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() - 1, prueba.Gety() - 1, color) == true)
                     {
                         x = prueba.Getx() - 1;
@@ -1458,6 +1532,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1467,7 +1542,9 @@ namespace IPC2
                             x--;
                             y--;
                         }
+
                     }
+                    poto = 0;
                     if (colorcerca(prueba.Getx() + 1, prueba.Gety() - 1, color) == true)
                     {
                         x = prueba.Getx() + 1;
@@ -1478,6 +1555,7 @@ namespace IPC2
                             {
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
+                                maquina.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1487,7 +1565,9 @@ namespace IPC2
                             y--;
                             x++;
                         }
+
                     }
+                    poto = 0;
                 }
             }
             return casillas;
@@ -1553,7 +1633,7 @@ namespace IPC2
                     else
                     {
                         p = true;
-                        if (contador3 != 0 && (auxiliar == 1 || Cont == 0))
+                        if (contador3 != 0 && (auxiliar == 1 || Cont == 1))
                         {
                             contador3 = 0;
                         }
@@ -1573,18 +1653,20 @@ namespace IPC2
 
         public bool verificarco2(int x, int y, string color)
         {
+
             bool p = false;
             foreach (Ficha prueba in fichita)
             {
                 if (prueba.Getx() == x && prueba.Gety() == y)
                 {
 
-                    if (color.Equals(prueba.Getcolor()) && prueba.Getcolor() != "vacio")
+                    if (color.Equals(prueba.Getcolor()) && prueba.Getcolor() != "vacio" && poto >= 1)
                     {
 
                         Response.Write("<script>console.log('aqui esta tu concha abajo prueba: " + "id: " + prueba.Getid() + "pos x: " + prueba.Getx() + "posy: " + y + prueba.Getcolor() + "')</script>");
                         p = false;
                         Cont++;
+                        poto = 0;
 
 
                         return p;
@@ -1592,6 +1674,7 @@ namespace IPC2
                     else if (color != prueba.Getcolor())
                     {
                         p = true;
+                        poto++;
                         return p;
                     }
 
@@ -1646,6 +1729,9 @@ namespace IPC2
                             ViewState["turno"] = 1;
                             c1.BackColor = System.Drawing.Color.White;
                             guardarfichas(o, 1);
+                            ViewState["blancas"] = (int)ViewState["blancas"] + 1;
+
+
 
                         }
                     }
@@ -1657,6 +1743,7 @@ namespace IPC2
                             ViewState["turno"] = 0;
                             c1.BackColor = System.Drawing.Color.Black;
                             guardarfichas(o, 0);
+                            ViewState["negras"] = (int)ViewState["negras"] + 1;
 
                         }
                     }
@@ -1690,6 +1777,13 @@ namespace IPC2
             }
             pruebadiego2("a1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b1_Click(object sender, EventArgs e)
@@ -1714,6 +1808,13 @@ namespace IPC2
             }
             pruebadiego2("b1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c1_Click(object sender, EventArgs e)
@@ -1738,6 +1839,13 @@ namespace IPC2
             }
             pruebadiego2("c1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d1_Click(object sender, EventArgs e)
@@ -1762,6 +1870,13 @@ namespace IPC2
             }
             pruebadiego2("d1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e1_Click(object sender, EventArgs e)
@@ -1786,6 +1901,13 @@ namespace IPC2
             }
             pruebadiego2("e1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f1_Click(object sender, EventArgs e)
@@ -1810,6 +1932,13 @@ namespace IPC2
             }
             pruebadiego2("f1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g1_Click(object sender, EventArgs e)
@@ -1834,6 +1963,13 @@ namespace IPC2
             }
             pruebadiego2("g1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h1_Click(object sender, EventArgs e)
@@ -1858,6 +1994,13 @@ namespace IPC2
             }
             pruebadiego2("h1", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a2_Click(object sender, EventArgs e)
@@ -1882,6 +2025,13 @@ namespace IPC2
             }
             pruebadiego2("a2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b2_Click(object sender, EventArgs e)
@@ -1906,6 +2056,13 @@ namespace IPC2
             }
             pruebadiego2("b2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c2_Click(object sender, EventArgs e)
@@ -1930,6 +2087,13 @@ namespace IPC2
             }
             pruebadiego2("c2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d2_Click(object sender, EventArgs e)
@@ -1954,6 +2118,13 @@ namespace IPC2
             }
             pruebadiego2("d2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e2_Click(object sender, EventArgs e)
@@ -1978,6 +2149,13 @@ namespace IPC2
             }
             pruebadiego2("e2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f2_Click(object sender, EventArgs e)
@@ -2002,6 +2180,13 @@ namespace IPC2
             }
             pruebadiego2("f2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g2_Click(object sender, EventArgs e)
@@ -2026,6 +2211,13 @@ namespace IPC2
             }
             pruebadiego2("g2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h2_Click(object sender, EventArgs e)
@@ -2050,6 +2242,13 @@ namespace IPC2
             }
             pruebadiego2("h2", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a3_Click(object sender, EventArgs e)
@@ -2074,6 +2273,13 @@ namespace IPC2
             }
             pruebadiego2("a3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b3_Click(object sender, EventArgs e)
@@ -2098,6 +2304,13 @@ namespace IPC2
             }
             pruebadiego2("b3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c3_Click(object sender, EventArgs e)
@@ -2122,6 +2335,13 @@ namespace IPC2
             }
             pruebadiego2("c3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d3_Click(object sender, EventArgs e)
@@ -2146,6 +2366,13 @@ namespace IPC2
             }
             pruebadiego2("d3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e3_Click(object sender, EventArgs e)
@@ -2170,6 +2397,13 @@ namespace IPC2
             }
             pruebadiego2("e3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
 
         }
 
@@ -2195,6 +2429,13 @@ namespace IPC2
             }
             pruebadiego2("f3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g3_Click(object sender, EventArgs e)
@@ -2219,6 +2460,13 @@ namespace IPC2
             }
             pruebadiego2("g3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h3_Click(object sender, EventArgs e)
@@ -2243,6 +2491,13 @@ namespace IPC2
             }
             pruebadiego2("h3", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a4_Click(object sender, EventArgs e)
@@ -2267,6 +2522,13 @@ namespace IPC2
             }
             pruebadiego2("a4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b4_Click(object sender, EventArgs e)
@@ -2291,6 +2553,13 @@ namespace IPC2
             }
             pruebadiego2("b4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c4_Click(object sender, EventArgs e)
@@ -2315,6 +2584,13 @@ namespace IPC2
             }
             pruebadiego2("c4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d4_Click(object sender, EventArgs e)
@@ -2339,6 +2615,13 @@ namespace IPC2
             }
             pruebadiego2("d4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e4_Click(object sender, EventArgs e)
@@ -2363,6 +2646,13 @@ namespace IPC2
             }
             pruebadiego2("e4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f4_Click(object sender, EventArgs e)
@@ -2387,6 +2677,13 @@ namespace IPC2
             }
             pruebadiego2("f4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g4_Click(object sender, EventArgs e)
@@ -2412,6 +2709,13 @@ namespace IPC2
             }
             pruebadiego2("g4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h4_Click(object sender, EventArgs e)
@@ -2428,7 +2732,7 @@ namespace IPC2
                 }
                 else
                 {
-                    ViewState["bandera"] = 0;
+                    ViewState["bandera"] = 1;
                     ViewState["t"] = 1;
                     h4.BackColor = System.Drawing.Color.Black;
 
@@ -2436,6 +2740,13 @@ namespace IPC2
             }
             pruebadiego2("h4", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a5_Click(object sender, EventArgs e)
@@ -2460,6 +2771,13 @@ namespace IPC2
             }
             pruebadiego2("a5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b5_Click(object sender, EventArgs e)
@@ -2484,6 +2802,13 @@ namespace IPC2
             }
             pruebadiego2("b5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c5_Click(object sender, EventArgs e)
@@ -2514,6 +2839,13 @@ namespace IPC2
 
             pruebadiego2("c5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d5_Click(object sender, EventArgs e)
@@ -2538,6 +2870,13 @@ namespace IPC2
             }
             pruebadiego2("d5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e5_Click(object sender, EventArgs e)
@@ -2562,6 +2901,13 @@ namespace IPC2
             }
             pruebadiego2("e5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f5_Click(object sender, EventArgs e)
@@ -2586,6 +2932,13 @@ namespace IPC2
             }
             pruebadiego2("f5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g5_Click(object sender, EventArgs e)
@@ -2610,6 +2963,13 @@ namespace IPC2
             }
             pruebadiego2("g5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h5_Click(object sender, EventArgs e)
@@ -2634,6 +2994,13 @@ namespace IPC2
             }
             pruebadiego2("h5", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a6_Click(object sender, EventArgs e)
@@ -2658,6 +3025,13 @@ namespace IPC2
             }
             pruebadiego2("a6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b6_Click(object sender, EventArgs e)
@@ -2674,7 +3048,7 @@ namespace IPC2
                 }
                 else
                 {
-                    ViewState["bandera"] = 0;
+                    ViewState["bandera"] = 1;
                     ViewState["t"] = 1;
                     b6.BackColor = System.Drawing.Color.Black;
 
@@ -2682,6 +3056,13 @@ namespace IPC2
             }
             pruebadiego2("b6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c6_Click(object sender, EventArgs e)
@@ -2706,6 +3087,13 @@ namespace IPC2
             }
             pruebadiego2("c6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d6_Click(object sender, EventArgs e)
@@ -2730,6 +3118,13 @@ namespace IPC2
             }
             pruebadiego2("d6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e6_Click(object sender, EventArgs e)
@@ -2756,6 +3151,13 @@ namespace IPC2
             }
             pruebadiego2("e6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f6_Click(object sender, EventArgs e)
@@ -2781,6 +3183,13 @@ namespace IPC2
             }
             pruebadiego2("f6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g6_Click(object sender, EventArgs e)
@@ -2805,6 +3214,13 @@ namespace IPC2
             }
             pruebadiego2("g6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h6_Click(object sender, EventArgs e)
@@ -2829,6 +3245,13 @@ namespace IPC2
             }
             pruebadiego2("h6", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a7_Click(object sender, EventArgs e)
@@ -2853,6 +3276,13 @@ namespace IPC2
             }
             pruebadiego2("a7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b7_Click(object sender, EventArgs e)
@@ -2877,6 +3307,13 @@ namespace IPC2
             }
             pruebadiego2("b7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c7_Click(object sender, EventArgs e)
@@ -2901,6 +3338,13 @@ namespace IPC2
             }
             pruebadiego2("c7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d7_Click(object sender, EventArgs e)
@@ -2925,6 +3369,13 @@ namespace IPC2
             }
             pruebadiego2("d7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e7_Click(object sender, EventArgs e)
@@ -2949,6 +3400,13 @@ namespace IPC2
             }
             pruebadiego2("e7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f7_Click(object sender, EventArgs e)
@@ -2973,6 +3431,13 @@ namespace IPC2
             }
             pruebadiego2("f7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g7_Click(object sender, EventArgs e)
@@ -2997,6 +3462,13 @@ namespace IPC2
             }
             pruebadiego2("g7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h7_Click(object sender, EventArgs e)
@@ -3014,12 +3486,20 @@ namespace IPC2
                 else
                 {
                     ViewState["bandera"] = 1;
+                    ViewState["t"] = 1;
                     h7.BackColor = System.Drawing.Color.Black;
 
                 }
             }
             pruebadiego2("h7", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void a8_Click(object sender, EventArgs e)
@@ -3044,6 +3524,13 @@ namespace IPC2
             }
             pruebadiego2("a8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void b8_Click(object sender, EventArgs e)
@@ -3068,6 +3555,13 @@ namespace IPC2
             }
             pruebadiego2("b8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void c8_Click(object sender, EventArgs e)
@@ -3092,6 +3586,13 @@ namespace IPC2
             }
             pruebadiego2("c8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void d8_Click(object sender, EventArgs e)
@@ -3116,6 +3617,13 @@ namespace IPC2
             }
             pruebadiego2("d8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void e8_Click(object sender, EventArgs e)
@@ -3140,6 +3648,13 @@ namespace IPC2
             }
             pruebadiego2("e8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void f8_Click(object sender, EventArgs e)
@@ -3164,6 +3679,13 @@ namespace IPC2
             }
             pruebadiego2("f8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void g8_Click(object sender, EventArgs e)
@@ -3188,6 +3710,13 @@ namespace IPC2
             }
             pruebadiego2("g8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         protected void h8_Click(object sender, EventArgs e)
@@ -3212,6 +3741,13 @@ namespace IPC2
             }
             pruebadiego2("h8", (int)ViewState["turno"]);
             mov();
+            if (WebForm1.num == 2)
+            {
+                if ((int)ViewState["turno"] != 0)
+                {
+                    maquinas();
+                }
+            }
         }
 
         public int Color()
@@ -3737,7 +4273,7 @@ namespace IPC2
 
             foreach (Ficha prueba in fichita)
             {
-                if (prueba.Getx() == x && prueba.Gety() == y  && prueba.Getocupado() == true)
+                if (prueba.Getx() == x && prueba.Gety() == y && prueba.Getocupado() == true)
                 {
                     if (prueba.Getcolor().Equals("blanco"))
                     {
@@ -3777,8 +4313,94 @@ namespace IPC2
             }
 
         }
-    }
 
+        public void maquinas()
+        {
+            ayuda = 0;
+            Random aleatorio = new Random();
+            int numero;
+
+            if (maquina.Count != 0)
+            {
+                numero = aleatorio.Next(0, maquina.Count());
+                string id = maquina.ElementAt(numero);
+
+                Button ma = FindControl(id) as Button;
+                pruebadiego(id, Color2());
+                if (contador2 >= 1 && contador3 >= 1)
+                {
+                    if (Color() == 1)
+                    {
+                        ViewState["bandera"] = 0;
+                        ViewState["t"] = 1;
+                        ma.BackColor = System.Drawing.Color.White;
+
+                    }
+                    else
+                    {
+                        ViewState["bandera"] = 1;
+                        ViewState["t"] = 1;
+                        ma.BackColor = System.Drawing.Color.Black;
+
+                    }
+                    pruebadiego2(id, (int)ViewState["turno"]);
+                    mov();
+                }
+            }
+        }
+        public void datos(string usuario)
+        {
+            string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
+            using (SqlConnection sqlCon = new SqlConnection(connectionString))
+            {
+
+                sqlCon.Open();
+                if (encontrar(usuario) == true)
+                {
+                    Response.Write("<script>window.alert('El nombre de usuario ya esta registrado, ingrese uno nuevo')</script>");
+                    sqlCon.Close();
+                }
+                else
+                {
+                    //SqlDataAdapter sqlDa = new SqlDataAdapter("insert into Reportes (nombre, apellido, usuario,modalidad,ganadas,perdidas,empatadas,movimientos) values('" + nombre + "','" + apellido + "','" + usuario + "','" + pass + "','" + nac + "','" + pais + "','" + correo + "')", sqlCon);
+                    DataTable dtb = new DataTable();
+                    //sqlDa.Fill(dtb);
+                    sqlCon.Close();
+                    Response.Write("<script>window.alert('Registro completado :)')</script>");
+                    Response.Redirect("WebForm1.aspx");
+                }
+            }
+        }
+        public bool encontrar(string nombre)
+        {
+            string sql = string.Empty;
+            string usu = nombre;
+            DataTable dt = new DataTable();
+            
+            string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
+            SqlConnection sqlcon = new SqlConnection(connectionString);
+            sqlcon.Open();
+
+            sql = string.Format("Select nombres,apellidos from info where usuario='{0}'", usu);
+            SqlCommand coma = new SqlCommand(sql, sqlcon);
+            SqlDataReader reg = null;
+            
+            SqlDataAdapter adap = new SqlDataAdapter(coma);
+            adap.Fill(dt);
+            reg = coma.ExecuteReader();
+            if (reg.Read() == true)
+            {
+                DataRow row = dt.Rows[0];
+                
+                nombres = Convert.ToString(row["nombres"]);
+                apellido = Convert.ToString(row["apellidos"]);
+                return true;
+            }
+            return false;
+            
+        }
+
+    }
 }
 
     

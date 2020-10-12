@@ -10,6 +10,8 @@ namespace IPC2
 {
     public partial class Login : System.Web.UI.Page
     {
+        public static string nombre;
+        public static int iniciado = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -19,7 +21,9 @@ namespace IPC2
         {
             if (Buscar() == true)
             {
+                iniciado = 1;
                 Response.Redirect("WebForm1.aspx");
+                
             }
             else
             {
@@ -35,6 +39,7 @@ namespace IPC2
             bool resultado = false;
             string sql = string.Empty;
             string usu = usuario.Text;
+            nombre = usu;
             string co = Pass.Text;
             string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
             SqlConnection sqlcon = new SqlConnection(connectionString);
@@ -53,6 +58,11 @@ namespace IPC2
             {
                 return false;
             }
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Registro.aspx");
         }
     }
 }

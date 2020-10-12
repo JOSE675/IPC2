@@ -25,7 +25,7 @@
        
             <asp:Button CssClass="BotonesP" ID="Single" runat="server" Text="Partida JCJ" OnClick="Single_Click"  />
             <br />
-            <asp:Button CssClass="BotonesP" ID="SingleM" runat="server" Text="Partida JCM"  />
+            <asp:Button CssClass="BotonesP" ID="SingleM" runat="server" Text="Partida JCM" OnClick="SingleM_Click"  />
             <br />
             <asp:Button CssClass="BotonesP" ID="Multi" runat="server" Text="Multijugador"  />
             <br />
@@ -36,7 +36,7 @@
         
             <asp:Button CssClass="BotonesP" ID="Button1" runat="server" Text="Registrarse" OnClick="Button1_Click1" />
             <br />
-            <asp:Button CssClass="BotonesP" ID="Button2" runat="server" Text="Iniciar sesion"  />
+            <asp:Button CssClass="BotonesP" ID="Button2" runat="server" Text="Iniciar sesion" OnClick="Button2_Click"  />
             <br />
     </div>
 

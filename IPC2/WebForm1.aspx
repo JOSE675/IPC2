@@ -47,6 +47,7 @@
             <br />
             
             <asp:Button CssClass="BotonesP" runat="server" Text="Historial" />
+        <asp:FileUpload ID="FileUpload1" runat="server" />
     </div>
     
     <div id="Ayuda">

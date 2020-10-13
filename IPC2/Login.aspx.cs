@@ -12,6 +12,7 @@ namespace IPC2
     {
         public static string nombre;
         public static int iniciado = 0;
+        public static string user;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -22,6 +23,7 @@ namespace IPC2
             if (Buscar() == true)
             {
                 iniciado = 1;
+                user = usuario.Text;
                 Response.Redirect("WebForm1.aspx");
                 
             }

@@ -5,13 +5,14 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using IPC2;
-
+using System.Diagnostics;
 namespace IPC2
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
         public static int num = 0;
         public static int p = 0;
+        public static string nombre;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -31,6 +32,7 @@ namespace IPC2
         {
             if (Login.iniciado != 0)
             {
+                nombre=FileUpload1.FileName;
                 num = 1;
                 Response.Redirect("WebForm3.aspx");
                 p = 0;

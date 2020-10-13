@@ -24,6 +24,10 @@ namespace IPC2
         string nombre;
         string apellido;
         string nombres;
+        int ganadas = 0;
+        int perdidas = 0;
+        int empatadas = 0;
+        
 
         LinkedList<string> vacios = new LinkedList<string>();
         LinkedList<string> prueb = new LinkedList<string>();
@@ -40,15 +44,16 @@ namespace IPC2
         {
             ViewState["vali"] = ViewState["vali"];
             contador++;
-            
+
             if (ViewState["vali"] == null)
             {
+                
                 d4.BackColor = System.Drawing.Color.White;
                 e4.BackColor = System.Drawing.Color.Black;
                 d5.BackColor = System.Drawing.Color.Black;
                 e5.BackColor = System.Drawing.Color.White;
                 ViewState["vali"] = 1;
-                ViewState["turno"] = 0;
+                ViewState["turno"] = 1;
                 ViewState["verifi"] = -1;
                 ViewState["t"] = 0;
                 ViewState["blancas"] = 0;
@@ -139,7 +144,7 @@ namespace IPC2
         }
         public void mov()
         {
-            
+
             if ((int)ViewState["turno"] == 0)
             {
                 string co = buscar("blanco");
@@ -201,7 +206,7 @@ namespace IPC2
                     Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
                 }
 
-
+                encontrar(Login.user, "JCJ", 1, 0, 0);
             }
             if (fin == 1)
             {
@@ -4174,7 +4179,7 @@ namespace IPC2
             string ficha = "";
             int val = 0;
 
-            using (XmlTextReader xmlReader = new XmlTextReader(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\prueba.xml"))
+            using (XmlTextReader xmlReader = new XmlTextReader(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\" + WebForm1.nombre))
             {
                 while (xmlReader.Read())
                 {
@@ -4348,59 +4353,155 @@ namespace IPC2
                 }
             }
         }
-        public void datos(string usuario)
-        {
-            string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
-            using (SqlConnection sqlCon = new SqlConnection(connectionString))
-            {
+        //public void datos(string usuario)
+        //{
+        //    string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
+        //    using (SqlConnection sqlCon = new SqlConnection(connectionString))
+        //    {
 
-                sqlCon.Open();
-                if (encontrar(usuario) == true)
-                {
-                    Response.Write("<script>window.alert('El nombre de usuario ya esta registrado, ingrese uno nuevo')</script>");
-                    sqlCon.Close();
-                }
-                else
-                {
-                    //SqlDataAdapter sqlDa = new SqlDataAdapter("insert into Reportes (nombre, apellido, usuario,modalidad,ganadas,perdidas,empatadas,movimientos) values('" + nombre + "','" + apellido + "','" + usuario + "','" + pass + "','" + nac + "','" + pais + "','" + correo + "')", sqlCon);
-                    DataTable dtb = new DataTable();
-                    //sqlDa.Fill(dtb);
-                    sqlCon.Close();
-                    Response.Write("<script>window.alert('Registro completado :)')</script>");
-                    Response.Redirect("WebForm1.aspx");
-                }
-            }
-        }
-        public bool encontrar(string nombre)
+        //        sqlCon.Open();
+        //        if (encontrar(usuario) == true)
+        //        {
+        //            Response.Write("<script>window.alert('El nombre de usuario ya esta registrado, ingrese uno nuevo')</script>");
+        //            sqlCon.Close();
+        //        }
+        //        else
+        //        {
+        //            //SqlDataAdapter sqlDa = new SqlDataAdapter("insert into Reportes (nombre, apellido, usuario,modalidad,ganadas,perdidas,empatadas,movimientos) values('" + nombre + "','" + apellido + "','" + usuario + "','" + pass + "','" + nac + "','" + pais + "','" + correo + "')", sqlCon);
+        //            DataTable dtb = new DataTable();
+        //            //sqlDa.Fill(dtb);
+        //            sqlCon.Close();
+        //            Response.Write("<script>window.alert('Registro completado :)')</script>");
+        //            Response.Redirect("WebForm1.aspx");
+        //        }
+        //    }
+        //}
+        public void encontrar(string nombre, string modalidad, int G, int P, int E)
         {
             string sql = string.Empty;
             string usu = nombre;
+            string sql2 = string.Empty;
+            string sql3 = string.Empty;
             DataTable dt = new DataTable();
-            
+            DataTable dt2 = new DataTable();
             string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
             SqlConnection sqlcon = new SqlConnection(connectionString);
             sqlcon.Open();
 
             sql = string.Format("Select nombres,apellidos from info where usuario='{0}'", usu);
-            SqlCommand coma = new SqlCommand(sql, sqlcon);
-            SqlDataReader reg = null;
+            sql3 = string.Format("Select nombres from info where usuario='{0}'", usu);
+            sql2 = string.Format("Select apellidos from info where usuario='{0}'", usu);
             
-            SqlDataAdapter adap = new SqlDataAdapter(coma);
-            adap.Fill(dt);
-            reg = coma.ExecuteReader();
+            SqlCommand coma = new SqlCommand(sql, sqlcon);
+            SqlCommand coma3 = new SqlCommand(sql3, sqlcon);
+            SqlCommand cm2 = new SqlCommand(sql2, sqlcon);
+
+            SqlDataReader reg = null;
+                        
+               reg = coma.ExecuteReader();
+
             if (reg.Read() == true)
             {
-                DataRow row = dt.Rows[0];
+
+                reg.Close();
+                nombres = coma3.ExecuteScalar().ToString();
+                apellido = cm2.ExecuteScalar().ToString();
+
+                if (WebForm1.num == 2)
+                {
+                    sql2 = string.Format("Select ganadas,perdidas,empatadas from Reportes where usuario='{0} and modalidad={1}'", usu, "JCM");
+                }
+                else
+                {
+                    sql2 = string.Format("Select ganadas,perdidas,empatadas from Reportes where usuario='{0} and modalidad={1}'", usu, "JCJ");
+                }
+                sqlcon.Close();
+            }
+            if (DTbuscar(nombre,G,P,E) == true)
+            {
+
+                SqlDataAdapter instertar = new SqlDataAdapter("insert into Reportes(nombre,apellido,usuario,modalidad,ganadas,perdidas,empatadas) values('" + nombres + "','" + apellido + "','" + usu + "','" + modalidad + "','" + ganadas + "','" + perdidas + "','" + empatadas + "')", sqlcon);
+                DataTable ins2 = new DataTable();
+                instertar.Fill(ins2);
+                sqlcon.Close();
+            }
+            else
+            {
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    SqlDataAdapter instertar = new SqlDataAdapter("insert into Reportes(nombre,apellido,usuario,modalidad,ganadas,perdidas,empatadas) values('" + nombres + "','" + apellido + "','" + usu + "','" + modalidad + "','" + G + "','" + P + "','" + E + "')", sqlcon);
+                    DataTable ins = new DataTable();
+                    instertar.Fill(ins);
+                }
                 
-                nombres = Convert.ToString(row["nombres"]);
-                apellido = Convert.ToString(row["apellidos"]);
+                sqlcon.Close();
+            }
+
+        }
+        public bool DTbuscar(string nombre,int G,int P, int E)
+        {
+            string sql = string.Empty;
+            string usu = nombre;
+            string sql2 = string.Empty;
+            
+            
+            
+            string connectionString = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
+            SqlConnection sqlcon = new SqlConnection(connectionString);
+            sqlcon.Open();
+            SqlDataReader reg2 = null;
+            DataTable dt2 = new DataTable();
+            if (WebForm1.num == 2)
+            {
+                sql2 = string.Format("Select ganadas,perdidas,empatadas from Reportes where usuario='{0} and modalidad={1}'", usu, "JCM");
+            }
+            else
+            {
+                sql2 = string.Format("Select ganadas,perdidas,empatadas from Reportes where usuario='{0}' and modalidad='{1}'", usu, "JCJ");
+            }
+            SqlCommand coma2 = new SqlCommand(sql2, sqlcon);
+            
+
+            SqlDataAdapter adap2 = new SqlDataAdapter(coma2);
+            adap2.Fill(dt2);
+            reg2 = coma2.ExecuteReader();
+
+            
+            if (reg2.Read() == true)
+            {
+                
+                
+                DataRow row2 = dt2.Rows[0];
+                if (G >= 1)
+                {
+                    ganadas = Convert.ToInt32(row2["ganadas"]) + 1;
+                    perdidas = Convert.ToInt32(row2["perdidas"]);
+                    empatadas = Convert.ToInt32(row2["empatadas"]);
+                }
+                else if (P >= 1)
+                {
+                    ganadas = Convert.ToInt32(row2["ganadas"]);
+                    perdidas = Convert.ToInt32(row2["perdidas"]) + 1;
+                    empatadas = Convert.ToInt32(row2["empatadas"]);
+                }
+                else
+                {
+                    ganadas = Convert.ToInt32(row2["ganadas"]);
+                    perdidas = Convert.ToInt32(row2["perdidas"]);
+                    empatadas = Convert.ToInt32(row2["empatadas"]) + 1;
+                }
                 return true;
             }
+            sqlcon.Close();
             return false;
-            
         }
-
     }
+
 }
+
+
+    
+
 
     

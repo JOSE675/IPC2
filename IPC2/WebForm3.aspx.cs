@@ -34,6 +34,7 @@ namespace IPC2
         LinkedList<Ficha> fichita = new LinkedList<Ficha>();
         LinkedList<string> posiciones = new LinkedList<string>();
         LinkedList<string> maquina = new LinkedList<string>();
+        LinkedList<string> posibles = new LinkedList<string>();
         bool quiza = false;
         public int contador = 0;
         public int contador2 = 0;
@@ -53,21 +54,29 @@ namespace IPC2
                 d5.BackColor = System.Drawing.Color.Black;
                 e5.BackColor = System.Drawing.Color.White;
                 ViewState["vali"] = 1;
-                ViewState["turno"] = 1;
+                ViewState["turno"] = 0;
                 ViewState["verifi"] = -1;
                 ViewState["t"] = 0;
+                ViewState["t2"] = 0;
                 ViewState["blancas"] = 0;
                 ViewState["negras"] = 0;
                 nombre = Login.nombre;
+                
             }
             if (WebForm1.num == 1)
             {
                 cargar();
                 verdes();
                 WebForm1.num = 0;
+                mov();
             }
             guardarfichas("", (int)ViewState["turno"]);
 
+            if ((int)ViewState["t2"] == 0)
+            {
+                mov();
+                ViewState["t2"] = 1;
+            }
 
 
 
@@ -151,7 +160,16 @@ namespace IPC2
                 if (co != "Posiciones posibles:")
                 {
                     fin = 0;
+                    foreach(string prueba in posibles)
+                    {
+                        Button c1 = FindControl(prueba) as Button;
+                        if (c1 != null)
+                        {
+                            c1.BackColor = System.Drawing.Color.Gray;
+                        }
+                    }
                     Response.Write("<script>console.log('" + co + "')</script>");
+                    posibles.Clear();
                 }
                 else
                 {
@@ -166,7 +184,16 @@ namespace IPC2
                 if (co != "Posiciones posibles:")
                 {
                     fin = 0;
+                    foreach (string prueba in posibles)
+                    {
+                        Button c1 = FindControl(prueba) as Button;
+                        if (c1 != null)
+                        {
+                            c1.BackColor = System.Drawing.Color.Gray;
+                        }
+                    }
                     Response.Write("<script>console.log('" + co + "')</script>");
+                    posibles.Clear();
                 }
                 else
                 {
@@ -233,6 +260,11 @@ namespace IPC2
                 {
                     colorsito = "negro";
                 }
+                else if (c1.BackColor.Name == "Gray")
+                {
+                    colorsito = "vacio";
+                    c1.BackColor = System.Drawing.Color.ForestGreen;
+                }
 
                 else
                 {
@@ -290,6 +322,9 @@ namespace IPC2
             else if (c1.BackColor.Name == "Black" && c1 != null)
             {
                 ocu = true;
+            }else if (c1.BackColor.Name=="Gray" && c1 != null)
+            {
+                ocu = false;
             }
 
             else
@@ -1402,6 +1437,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha abajo" + prueba.Getid() + prueba.Getx() + " " + y + prueba.Getcolor() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (y >= 8)
@@ -1425,6 +1461,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha derecha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8)
@@ -1447,6 +1484,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha izquierda" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x <= 1)
@@ -1470,6 +1508,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha arriba" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (y <= 1)
@@ -1492,6 +1531,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1515,6 +1555,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1538,6 +1579,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)
@@ -1561,6 +1603,7 @@ namespace IPC2
                                 Response.Write("<script>console.log('aqui esta tu concha" + prueba.Getid() + "')</script>");
                                 casillas += " " + prueba.Getid();
                                 maquina.AddLast(prueba.Getid());
+                                posibles.AddLast(prueba.Getid());
                                 break;
                             }
                             if (x >= 8 || y >= 8 || x <= 1 || y <= 1)

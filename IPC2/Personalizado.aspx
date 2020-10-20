@@ -1,17 +1,12 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm3.aspx.cs" Inherits="IPC2.WebForm3" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Personalizado.aspx.cs" Inherits="IPC2.Personalizado" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link href="Estilos/Tablero.css" rel="stylesheet" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    <link href="Estilos/Tablero.css" rel="stylesheet" />
-    <style type="text/css">
-        .cuadros {
-            height: 76px;
-        }
-    </style>
 </head>
 <body style="background-image:url(IMG/tab.jpg); background-size: 1440px 700px; background-repeat:no-repeat">
     <form id="form1" runat="server">
@@ -410,8 +405,6 @@
         </div>
                 </div>
             </div>
-
-
     </form>
 </body>
 </html>

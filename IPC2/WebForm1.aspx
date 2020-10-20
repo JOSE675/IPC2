@@ -29,6 +29,8 @@
             <br />
             <asp:Button CssClass="BotonesP" ID="Multi" runat="server" Text="Multijugador"  />
             <br />
+            <asp:Button CssClass="BotonesP" ID="Inverso" runat="server" OnClick="Button4_Click" Text="Button" />
+            <br />
             <asp:Button CssClass="BotonesP" ID="Tor" runat="server" Text="Torneos" />
             </div>
     <div id="Registro">

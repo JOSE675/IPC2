@@ -25,13 +25,13 @@ body {
     background-color:darkcyan;
     height: 200px;
     width:200px;
-    top: 10px;
+    top: 5px;
     text-align:center;
     
 }
 .BotonesP{
     background-color:coral;
-    margin:10px 0px 10px 0px;
+    margin:5px 0px 10px 0px;
     width:180px;
 }
 .Title{

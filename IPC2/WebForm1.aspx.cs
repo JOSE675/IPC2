@@ -13,6 +13,7 @@ namespace IPC2
         public static int num = 0;
         public static int p = 0;
         public static string nombre;
+        public static int reve;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -46,7 +47,16 @@ namespace IPC2
 
         protected void Single_Click(object sender, EventArgs e)
         {
-
+            if (Login.iniciado != 0)
+            {
+                num = 0;
+                Response.Redirect("WebForm3.aspx");
+                p = 0;
+            }
+            else
+            {
+                Response.Write("<script>window.alert('Debe iniciar sesion antes de comenzar')</script>");
+            }
         }
 
         protected void SingleM_Click(object sender, EventArgs e)
@@ -65,6 +75,12 @@ namespace IPC2
         protected void Button2_Click(object sender, EventArgs e)
         {
             Response.Redirect("Login.aspx");
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            reve = 1;
+            Response.Write("<script>window.alert('Modo Inverso activado')</script>");
         }
     }
 }

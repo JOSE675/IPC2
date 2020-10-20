@@ -74,6 +74,9 @@
     <Content Include="IMG\Fond.jpg" />
     <Content Include="IMG\tab.jpg" />
     <Content Include="Login.aspx" />
+    <Content Include="Personalizado.aspx" />
+    <Content Include="Seleccion de colores.aspx" />
+    <Content Include="SeleccionColor.css" />
     <Content Include="Web.config" />
     <Content Include="Registro.aspx" />
     <Content Include="WebForm1.aspx" />
@@ -88,6 +91,13 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Personalizado.aspx.cs">
+      <DependentUpon>Personalizado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Personalizado.aspx.designer.cs">
+      <DependentUpon>Personalizado.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registro.aspx.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
@@ -95,6 +105,13 @@
     </Compile>
     <Compile Include="Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Seleccion de colores.aspx.cs">
+      <DependentUpon>Seleccion de colores.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seleccion de colores.aspx.designer.cs">
+      <DependentUpon>Seleccion de colores.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>

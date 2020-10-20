@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -77,7 +78,8 @@ namespace IPC2
                 mov();
                 ViewState["t2"] = 1;
             }
-
+            Thread hilo1 = new Thread(new ThreadStart(Tiempo));
+            hilo1.Start();
 
 
 
@@ -160,14 +162,7 @@ namespace IPC2
                 if (co != "Posiciones posibles:")
                 {
                     fin = 0;
-                    foreach(string prueba in posibles)
-                    {
-                        Button c1 = FindControl(prueba) as Button;
-                        if (c1 != null)
-                        {
-                            c1.BackColor = System.Drawing.Color.Gray;
-                        }
-                    }
+                   
                     Response.Write("<script>console.log('" + co + "')</script>");
                     posibles.Clear();
                 }
@@ -184,14 +179,7 @@ namespace IPC2
                 if (co != "Posiciones posibles:")
                 {
                     fin = 0;
-                    foreach (string prueba in posibles)
-                    {
-                        Button c1 = FindControl(prueba) as Button;
-                        if (c1 != null)
-                        {
-                            c1.BackColor = System.Drawing.Color.Gray;
-                        }
-                    }
+                   
                     Response.Write("<script>console.log('" + co + "')</script>");
                     posibles.Clear();
                 }
@@ -222,18 +210,91 @@ namespace IPC2
                         v++;
                     }
                 }
-                if (b > n)
+                if (WebForm1.reve == 1)
                 {
-                    b = b + v;
-                    Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    if (b > n)
+                    {
+                        b = b + v;
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 0, 1, 0);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 0, 1, 0);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    else if(b<n)
+                    {
+                        n = n + v;
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 1, 0, 0);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 1, 0, 0);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    else
+                    {
+                        
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 0, 0, 1);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 0, 0, 1);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    
                 }
                 else
                 {
-                    n = n + v;
-                    Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    if (b > n)
+                    {
+                        b = b + v;
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 1, 0, 0);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 1, 0, 0);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    else if(b<n)
+                    {
+                        n = n + v;
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 0, 1, 0);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 0, 1, 0);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    else
+                    {
+                        if (WebForm1.num != 2)
+                        {
+                            encontrar(Login.user, "JCJ", 0, 0, 1);
+                        }
+                        else
+                        {
+                            encontrar(Login.user, "JCM", 0, 0, 1);
+                        }
+                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                    }
+                    
                 }
-
-                encontrar(Login.user, "JCJ", 1, 0, 0);
             }
             if (fin == 1)
             {
@@ -4235,7 +4296,7 @@ namespace IPC2
 
 
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\prueba.xml");
+            xmlDoc.Load(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\"+WebForm1.nombre);
             for (int i = 0; i < val; i++)
             {
                 foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes[i].ChildNodes)
@@ -4539,6 +4600,16 @@ namespace IPC2
             sqlcon.Close();
             return false;
         }
+        public void Tiempo()
+        {
+            int n = 1;
+            while (true)
+            {
+                Jugador1.Text =n.ToString();
+                n = n+1;
+            }
+        }
+        
     }
 
 }

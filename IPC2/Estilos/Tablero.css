@@ -17,10 +17,7 @@
     float:left;
     text-align:center;
 }
-form{
-    width:55%;
-    padding-left:350px;
-}
+
 
 .ficha{
     border-radius:50px;
@@ -29,12 +26,29 @@ form{
     margin-top:10px;
     
 }
-
-#guardar{
-    background-color:aqua;
-    width:10000px;
+#Principal{
+    width:1000px;
     height:1000px;
-    position:relative;
-    margin-left:auto;
-    margin-right:auto;
+    
+    
+    
+   
+}
+
+#Tablero {
+    width: 800px;
+    height:626px;
+   position:absolute;   
+    
+    margin-left:30%;
+    
+    
+    
+}
+#informacion{
+    width:250px;
+    height:250px;
+    background-color:lawngreen;
+    position:absolute;
+    
 }

@@ -11,6 +11,16 @@ namespace IPC2
 {
     public partial class Historial : System.Web.UI.Page
     {
-       
+        string conexion = @"Data Source=DESKTOP-OFV01SM;Initial Catalog=Datos;Integrated Security=True;";
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            SqlConnection sqlcon = new SqlConnection(conexion);
+            SqlDataAdapter da = new SqlDataAdapter("Select * from Reportes where usuario='" + Login.user + "'", sqlcon);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            this.GridView1.DataSource = dt;
+            GridView1.DataBind();
+        }
     }
 }

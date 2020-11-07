@@ -82,5 +82,24 @@ namespace IPC2
             reve = 1;
             Response.Write("<script>window.alert('Modo Inverso activado')</script>");
         }
+
+        protected void Multi_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Unnamed1_Click(object sender, EventArgs e)
+        {
+            if (Login.iniciado != 0)
+            {
+                Response.Redirect("Historial.aspx");
+
+            }
+            else
+            {
+                Response.Write("<script>window.alert('Debe iniciar sesion antes de comenzar')</script>");
+
+            }
+        }
     }
 }

@@ -78,8 +78,7 @@ namespace IPC2
                 mov();
                 ViewState["t2"] = 1;
             }
-            Thread hilo1 = new Thread(new ThreadStart(Tiempo));
-            hilo1.Start();
+            
 
 
 

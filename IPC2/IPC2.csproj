@@ -67,23 +67,41 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dinamico.aspx" />
     <Content Include="Estilos\Login.css" />
     <Content Include="Estilos\Principal.css" />
     <Content Include="Estilos\RegistroE.css" />
     <Content Include="Estilos\Tablero.css" />
+    <Content Include="Historial.aspx" />
     <Content Include="IMG\Fond.jpg" />
     <Content Include="IMG\tab.jpg" />
     <Content Include="Login.aspx" />
     <Content Include="Personalizado.aspx" />
     <Content Include="Seleccion de colores.aspx" />
     <Content Include="SeleccionColor.css" />
+    <Content Include="TXtreme.aspx" />
     <Content Include="Web.config" />
     <Content Include="Registro.aspx" />
     <Content Include="WebForm1.aspx" />
     <Content Include="WebForm3.aspx" />
+    <Content Include="Xtreme.css" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Dinamico.aspx.cs">
+      <DependentUpon>Dinamico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Dinamico.aspx.designer.cs">
+      <DependentUpon>Dinamico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Historial.aspx.cs">
+      <DependentUpon>Historial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Historial.aspx.designer.cs">
+      <DependentUpon>Historial.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -112,6 +130,13 @@
     </Compile>
     <Compile Include="Seleccion de colores.aspx.designer.cs">
       <DependentUpon>Seleccion de colores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TXtreme.aspx.cs">
+      <DependentUpon>TXtreme.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TXtreme.aspx.designer.cs">
+      <DependentUpon>TXtreme.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>

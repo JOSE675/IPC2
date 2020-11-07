@@ -27,7 +27,7 @@
             <br />
             <asp:Button CssClass="BotonesP" ID="SingleM" runat="server" Text="Partida JCM" OnClick="SingleM_Click"  />
             <br />
-            <asp:Button CssClass="BotonesP" ID="Multi" runat="server" Text="Multijugador"  />
+            <asp:Button CssClass="BotonesP" ID="Multi" runat="server" Text="Multijugador" OnClick="Multi_Click"  />
             <br />
             <asp:Button CssClass="BotonesP" ID="Inverso" runat="server" OnClick="Button4_Click" Text="Button" />
             <br />
@@ -48,7 +48,7 @@
             <asp:Button CssClass="BotonesP" ID="Button3" runat="server" Text="Cargar Partida" OnClick="Button3_Click" />
             <br />
             
-            <asp:Button CssClass="BotonesP" runat="server" Text="Historial" />
+            <asp:Button CssClass="BotonesP" runat="server" Text="Historial" OnClick="Unnamed1_Click" />
         <asp:FileUpload ID="FileUpload1" runat="server" />
     </div>
     

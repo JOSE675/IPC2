@@ -19,8 +19,8 @@ namespace IPC2
             SqlDataAdapter da = new SqlDataAdapter("Select * from Reportes where usuario='" + Login.user + "'", sqlcon);
             DataTable dt = new DataTable();
             da.Fill(dt);
-            this.GridView1.DataSource = dt;
-            GridView1.DataBind();
+            this.Datos.DataSource = dt;
+            Datos.DataBind();
         }
     }
 }

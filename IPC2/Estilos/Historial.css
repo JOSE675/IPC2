@@ -1,0 +1,13 @@
+﻿#Datos{
+    color:blueviolet;
+    background-color:burlywood;
+    
+}
+
+#encerrar{
+    height:200px;
+    width:200px;
+    position:relative;
+    left:300px;
+    top:200px;
+}

@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dinamico.aspx" />
+    <Content Include="Estilos\Historial.css" />
     <Content Include="Estilos\Login.css" />
     <Content Include="Estilos\Principal.css" />
     <Content Include="Estilos\RegistroE.css" />

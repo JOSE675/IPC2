@@ -4617,7 +4617,7 @@ namespace IPC2
 
         protected void Button3_Click(object sender, EventArgs e)
         {
-            Response.Write("<script>window.alert('Perdio equipo 1 ')</script>");
+            Response.Write("<script>window.alert('Perdio equipo 1')</script>");
             Response.Redirect("WebForm1.aspx");
         }
     }

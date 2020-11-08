@@ -201,7 +201,7 @@ namespace IPC2
                         v++;
                     }
                 }
-                if (WebForm1.reve == 1)
+                if (Dinamico.inverso == 1)
                 {
                     if (b > n)
                     {
@@ -292,7 +292,7 @@ namespace IPC2
                 mov();
             }
         }
-
+        
         private void Pruebas(int cantidad, int cantidad2)
         {
             fichita = new LinkedList<Botones>();

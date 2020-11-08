@@ -11,6 +11,7 @@ namespace IPC2
     public partial class Dinamico : System.Web.UI.Page
     {
         public static int x;
+        public static int inverso;
         public static List<string> colores1 = new List<string>();
         public static List<string> colores2 = new List<string>();
         public static Botones[,] tablero;
@@ -169,6 +170,17 @@ namespace IPC2
             nombre = carga.FileName;
             Response.Redirect("TXtreme.aspx");
 
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("TXtreme.aspx");
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            inverso = 1;
+            Response.Redirect("TXtreme.aspx");
         }
     }
 }

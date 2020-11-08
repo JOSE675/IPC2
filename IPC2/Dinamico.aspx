@@ -40,6 +40,10 @@
             <br />
             <asp:FileUpload ID="carga" runat="server" ForeColor="Yellow" />
              <asp:Button ID="Button3" runat="server" Text="Cargar Partida" OnClick="Button3_Click" />
+            <br />
+            <br />
+            <asp:Button ID="Button1" runat="server" Text="Apertura personalizada" OnClick="Button1_Click" />
+            <asp:Button ID="Button2" runat="server" Text="Modo inverso" OnClick="Button2_Click" />
             
         </div>
         <div>

@@ -4608,7 +4608,18 @@ namespace IPC2
                 n = n+1;
             }
         }
-        
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Response.Write("<script>window.alert('Gano equipo 1')</script>");
+            Response.Redirect("WebForm1.aspx");
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Response.Write("<script>window.alert('Perdio equipo 1 ')</script>");
+            Response.Redirect("WebForm1.aspx");
+        }
     }
 
 }

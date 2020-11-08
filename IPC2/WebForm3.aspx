@@ -21,6 +21,8 @@
         <div id="informacion">
             <div style="width: 112px">
             <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Guardar partida" Width="97px" />
+                <asp:Button ID="Button2" runat="server" Text="Button" OnClick="Button2_Click" />
+                <asp:Button ID="Button3" runat="server" Text="Button" OnClick="Button3_Click" />
                 <asp:Label ID="Jugador1" runat="server" Text="Label"></asp:Label>
         </div>
         </div>

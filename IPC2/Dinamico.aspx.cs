@@ -14,6 +14,8 @@ namespace IPC2
         public static List<string> colores1 = new List<string>();
         public static List<string> colores2 = new List<string>();
         public static Botones[,] tablero;
+        public static int validar;
+        public static string nombre;
         
         public static int cantidad;
         public static int cantidad2;
@@ -159,6 +161,14 @@ namespace IPC2
             {
                 return ocupado;
             }
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            validar = 1;
+            nombre = carga.FileName;
+            Response.Redirect("TXtreme.aspx");
+
         }
     }
 }

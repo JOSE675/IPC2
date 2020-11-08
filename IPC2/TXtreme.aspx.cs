@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Xml;
 
 namespace IPC2
 {
@@ -17,10 +18,14 @@ namespace IPC2
         public static int turno;
         public static int colo;
         public static int valida;
+        public static int validar2;
         
         public static Botones[,] tablero;
+        
         public static int cantidad= Dinamico.cantidad;
         public static int cantidad2 = Dinamico.cantidad2;
+        public static int cantidadC;
+        public static int cantidad2C;
         public static Botones cuadronuevo;
         LinkedList<Botones> fichita = new LinkedList<Botones>();
         LinkedList<string> vacios = new LinkedList<string>();
@@ -28,6 +33,7 @@ namespace IPC2
         LinkedList<string> maquina = new LinkedList<string>();
         LinkedList<string> posibles = new LinkedList<string>();
         LinkedList<string> prueb = new LinkedList<string>();
+        LinkedList<XmlNodeList> hijos = new LinkedList<XmlNodeList>();
         public int contador2 = 0;
         int Cont = 0;
         int auxiliar = 0;
@@ -53,14 +59,21 @@ namespace IPC2
 
             if (x != 0)
             {
-                cantidad = Dinamico.cantidad;
-                cantidad2 = Dinamico.cantidad2;
-                cargar(cantidad, cantidad2);
+                if (Dinamico.validar != 1)
+                {
+                    cantidad = Dinamico.cantidad;
+                    cantidad2 = Dinamico.cantidad2;
+                    cargar(cantidad, cantidad2);
+                }
+                else
+                {
+                    cargar(cantidadC,cantidad2C);
+                }
                 x = 1;
             }
             else
             {
-                
+                validar2 = 0;
                 ViewState["vali"] = 1;
                 ViewState["turno"] = 0;
                 ViewState["verifi"] = -1;
@@ -71,7 +84,15 @@ namespace IPC2
                 ViewState["colores"] = 0;
                 valida = 0;
                 colo = 1;
-                Pruebas(Dinamico.cantidad, Dinamico.cantidad2);
+                if (Dinamico.validar != 1)
+                {
+                    Pruebas(Dinamico.cantidad, Dinamico.cantidad2);
+                }
+                else
+                {
+                    cargar2(Dinamico.nombre);
+
+                }
                 x = 1;
             }
             if ((int)ViewState["t2"] == 0)
@@ -193,7 +214,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 0, 1, 0);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador2: " + n + "')</script>");
                     }
                     else if (b < n)
                     {
@@ -206,7 +227,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 1, 0, 0);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador 2: " + n + "')</script>");
                     }
                     else
                     {
@@ -219,7 +240,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 0, 0, 1);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador 2: " + n + "')</script>");
                     }
 
                 }
@@ -236,7 +257,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 1, 0, 0);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador 2: " + n + "')</script>");
                     }
                     else if (b < n)
                     {
@@ -249,7 +270,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 0, 1, 0);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador 2: " + n + "')</script>");
                     }
                     else
                     {
@@ -261,7 +282,7 @@ namespace IPC2
                         {
                             encontrar(Login.user, "JCM", 0, 0, 1);
                         }
-                        Response.Write("<script>console.log('" + "Partida terminada! blancas: " + b + " negras: " + n + "')</script>");
+                        Response.Write("<script>console.log('" + "Partida terminada! Jugador 1: " + b + " Jugador 2 : " + n + "')</script>");
                     }
 
                 }
@@ -405,9 +426,23 @@ namespace IPC2
             Page.Form.Controls.Add(NewControl2);
             if (x == 0)
             {
-                coloresIn(cantidad, cantidad2);
+                if (Dinamico.validar != 1)
+                {
+                    coloresIn(cantidad, cantidad2);
+                }
+                else
+                {
+                    coloresIn(cantidadC, cantidad2C);
+                }
             }
-            colores(cantidad, cantidad2);
+            if (Dinamico.validar != 1)
+            {
+                colores(cantidad, cantidad2);
+            }
+            else
+            {
+                colores(cantidadC, cantidad2C);
+            }
 
 
 
@@ -593,19 +628,39 @@ namespace IPC2
                     es = prueba.getFila() + 1;
                     puto = prueba.getColumna() - 1;
                     culero = prueba.getFila() - 1;
-                    if (diego <= cantidad2+1 && es <= cantidad+1 && puto >= 0 && culero >= 0)
+                    if (Dinamico.validar != 1)
                     {
+                        if (diego <= cantidad2 + 1 && es <= cantidad + 1 && puto >= 0 && culero >= 0)
+                        {
 
-                        arribay(prueba.getColumna(), es, prueba.getColor(), color);
-                        arribay(diego, es, prueba.getColor(), color);
-                        arribay(puto, es, prueba.getColor(), color);
-                        arribay(diego, prueba.getFila(), prueba.getColor(), color);
-                        arribay(puto, prueba.getFila(), prueba.getColor(), color);
-                        arribay(prueba.getColumna(), culero, prueba.getColor(), color);
-                        arribay(puto, culero, prueba.getColor(), color);
-                        arribay(diego, culero, prueba.getColor(), color);
+                            arribay(prueba.getColumna(), es, prueba.getColor(), color);
+                            arribay(diego, es, prueba.getColor(), color);
+                            arribay(puto, es, prueba.getColor(), color);
+                            arribay(diego, prueba.getFila(), prueba.getColor(), color);
+                            arribay(puto, prueba.getFila(), prueba.getColor(), color);
+                            arribay(prueba.getColumna(), culero, prueba.getColor(), color);
+                            arribay(puto, culero, prueba.getColor(), color);
+                            arribay(diego, culero, prueba.getColor(), color);
 
 
+                        }
+                    }
+                    else
+                    {
+                        if (diego <= cantidad2C + 1 && es <= cantidadC + 1 && puto >= 0 && culero >= 0)
+                        {
+
+                            arribay(prueba.getColumna(), es, prueba.getColor(), color);
+                            arribay(diego, es, prueba.getColor(), color);
+                            arribay(puto, es, prueba.getColor(), color);
+                            arribay(diego, prueba.getFila(), prueba.getColor(), color);
+                            arribay(puto, prueba.getFila(), prueba.getColor(), color);
+                            arribay(prueba.getColumna(), culero, prueba.getColor(), color);
+                            arribay(puto, culero, prueba.getColor(), color);
+                            arribay(diego, culero, prueba.getColor(), color);
+
+
+                        }
                     }
                     verabajo(prueba.getColumna(), prueba.getFila(), prueba.getColor(),o);
                     verarriba(prueba.getColumna(), prueba.getFila(), prueba.getColor(),o);
@@ -1236,14 +1291,39 @@ namespace IPC2
                     {
                         continue;
                     }
-                    arriba(prueba.getColumna(), prueba.getFila(), c,p);
-                    abajo(prueba.getColumna(), prueba.getFila(), c,p);
-                    Der(prueba.getColumna(), prueba.getFila(), c,p);
-                    Izq(prueba.getColumna(), prueba.getFila(), c,p);
-                    Dabajo(prueba.getColumna(), prueba.getFila(), c, p);
-                    Iabajo(prueba.getColumna(), prueba.getFila(), c, p);
-                    Darriba(prueba.getColumna(), prueba.getFila(), c, p);
-                    Iarriba(prueba.getColumna(), prueba.getFila(), c, p);
+                    if (prueba.getColumna() == cantidad2)
+                    {
+                        arriba(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        abajo(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Der(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Izq(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Dabajo(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Iabajo(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Darriba(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                        Iarriba(prueba.getColumna() - 1, prueba.getFila(), c, p);
+                    }
+                    else if (prueba.getFila() == cantidad)
+                    {
+                        arriba(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        abajo(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Der(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Izq(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Dabajo(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Iabajo(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Darriba(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                        Iarriba(prueba.getColumna(), prueba.getFila() - 1, c, p);
+                    }
+                    else
+                    {
+                        arriba(prueba.getColumna(), prueba.getFila(), c, p);
+                        abajo(prueba.getColumna(), prueba.getFila(), c, p);
+                        Der(prueba.getColumna(), prueba.getFila(), c, p);
+                        Izq(prueba.getColumna(), prueba.getFila(), c, p);
+                        Dabajo(prueba.getColumna(), prueba.getFila(), c, p);
+                        Iabajo(prueba.getColumna(), prueba.getFila(), c, p);
+                        Darriba(prueba.getColumna(), prueba.getFila(), c, p);
+                        Iarriba(prueba.getColumna(), prueba.getFila(), c, p);
+                    }
                 }
             }
 
@@ -1422,9 +1502,12 @@ namespace IPC2
 
         }
 
-        public void Dabajo(int x, int y, string color,int o)
+        public void Dabajo(int x1, int y1, string color,int o)
         {
             int po = 0;
+            int x = x1;
+            int y = y1;
+              
             foreach (Botones prueba in tablero)
             {
                 if (po == 1)
@@ -1436,7 +1519,7 @@ namespace IPC2
                 {
                     while (true)
                     {
-                        if ((x > cantidad2 && y > cantidad) || (x < 1 && y < 1) || (x > cantidad2 && y < 1) || (x < 1 && y > cantidad))
+                        if ((x >= cantidad2 && y >= cantidad) || (x < 1 && y < 1) || (x >= cantidad2 && y < 1) || (x < 1 && y >= cantidad))
                         {
                             break;
                         }
@@ -1501,16 +1584,18 @@ namespace IPC2
                     //    }
                 }
             }
-            cambiar(color,x,y);
+            cambiar(color,x1,y1);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
             prueb = new LinkedList<string>();
 
         }
 
-        public void Iabajo(int x, int y, string color,int o)
+        public void Iabajo(int x1, int y1, string color,int o)
         {
             int po = 0;
+            int x = x1;
+            int y = y1;
             foreach (Botones prueba in tablero)
             {
                 if (po == 1)
@@ -1522,7 +1607,7 @@ namespace IPC2
                 {
                     while (true)
                     {
-                        if ((x > cantidad2 && y > cantidad) || (x < 1 && y < 1) || (x > cantidad2 && y < 1) || (x < 1 && y > cantidad))
+                        if ((x >= cantidad2 && y >= cantidad) || (x < 1 && y < 1) || (x >= cantidad2 && y < 1) || (x < 1 && y >= cantidad))
                         {
                             break;
                         }
@@ -1587,16 +1672,18 @@ namespace IPC2
                     //    }
                 }
             }
-            cambiar(color,x,y);
+            cambiar(color,x1,y1);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
             prueb = new LinkedList<string>();
 
         }
 
-        public void Darriba(int x, int y, string color,int o)
+        public void Darriba(int x1, int y1, string color,int o)
         {
             int po = 0;
+            int x = x1;
+            int y = y1;
             foreach (Botones prueba in tablero)
             {
                 if (po == 1)
@@ -1608,7 +1695,7 @@ namespace IPC2
                 {
                     while (true)
                     {
-                        if ((x > cantidad2 && y > cantidad) || (x < 1 && y < 1) || (x > cantidad2 && y < 1) || (x < 1 && y > cantidad))
+                        if ((x >= cantidad2 && y >= cantidad) || (x < 1 && y < 1) || (x >= cantidad2 && y < 1) || (x < 1 && y >= cantidad))
                         {
                             break;
                         }
@@ -1684,16 +1771,18 @@ namespace IPC2
                     //    }
                 }
             }
-            cambiar(color,x,y);
+            cambiar(color,x1,y1);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
             prueb = new LinkedList<string>();
 
         }
 
-        public void Iarriba(int x, int y, string color,int o)
+        public void Iarriba(int x1, int y1, string color,int o)
         {
             int po = 0;
+            int x = x1;
+            int y = y1;
             foreach (Botones prueba in tablero)
             {
                 if (po == 1)
@@ -1705,7 +1794,7 @@ namespace IPC2
                 {
                     while (true)
                     {
-                        if ((x > cantidad2 && y > cantidad) || (x < 1 && y < 1) || (x > cantidad2 && y < 1) || (x < 1 && y > cantidad))
+                        if ((x >= cantidad2 && y >= cantidad) || (x < 1 && y < 1) || (x >= cantidad2 && y < 1) || (x < 1 && y >= cantidad))
                         {
                             break;
                         }
@@ -1770,7 +1859,7 @@ namespace IPC2
                     //    }
                 }
             }
-            cambiar(color,x,y);
+            cambiar(color,x1,y1);
             vacios = new LinkedList<string>();
             posiciones = new LinkedList<string>();
             prueb = new LinkedList<string>();
@@ -1796,6 +1885,14 @@ namespace IPC2
         private void Ficha_click(object sender, EventArgs e)
         {
             Botones Seleccionado = (Botones)sender;
+            if (colo == (Dinamico.colores1.Count + Dinamico.colores2.Count)+1)
+            {
+                colo = 1;
+            }else if (validar2 == 1)
+            {
+                colo = 1;
+                validar2 = 2;
+            }
 
             pruebadiego(Seleccionado.getId(), Color2(), colo);
             if (contador2 >= 1 && contador3 >= 1)
@@ -1857,6 +1954,7 @@ namespace IPC2
             pruebadiego2(Seleccionado.getId(), (int)ViewState["turno"],colo);
             mov();
             
+
         }
 
         public int turnos()
@@ -1982,6 +2080,14 @@ namespace IPC2
 
         public void cambiar(string color ,int x, int y)
         {
+            if (x == cantidad2)
+            {
+                x = x - 1;
+            }
+            if (y == cantidad)
+            {
+                y = y - 1;
+            }
             if (((color == "Red") || (color == "Yellow") || (color == "Blue") || (color == "Orange") || (color == "LightGreen")) && vacios.Count==0 )
             {
                 ViewState["turno"] = 1;
@@ -2103,6 +2209,7 @@ namespace IPC2
 
 
             }
+           
         }
 
         public Botones bus(string id)
@@ -2500,6 +2607,130 @@ namespace IPC2
             }
             sqlcon.Close();
             return false;
+        }
+
+        public void cargar2(string nombre)
+        {
+            string cf = "";
+            string columna = "";
+            string fila = "";
+            string ficha = "";
+            int val = 0;
+            int filas = 0;
+            int columnas = 0;
+
+            using (XmlTextReader xmlReader = new XmlTextReader(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\" + nombre ))
+            {
+                while (xmlReader.Read())
+                {
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "ficha"))
+                    {
+                        val += 1;
+                    }
+                }
+            }
+
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"C:\\Users\\DELL\\Desktop\\ConexionSQL\\" + nombre);
+            XmlNodeList inicio = xmlDoc.GetElementsByTagName("partida");
+            foreach (XmlElement x in inicio) 
+            {
+                XmlNodeList f = ((XmlElement)x).GetElementsByTagName("filas");
+                cantidadC = Int32.Parse(f[0].InnerText);
+            }
+            foreach (XmlElement y in inicio)
+            {
+                XmlNodeList c = ((XmlElement)y).GetElementsByTagName("columnas");
+                cantidad2C = Int32.Parse(c[0].InnerText);
+            }
+            XmlNodeList J1 = xmlDoc.GetElementsByTagName("Jugador1");
+            XmlNodeList co1 = ((XmlElement)J1[0]).GetElementsByTagName("color");
+            foreach (XmlElement cor in co1)
+            {
+                Dinamico.colores1.Add(cor.InnerText);
+            }
+            XmlNodeList J2 = xmlDoc.GetElementsByTagName("Jugador2");
+            XmlNodeList co2 = ((XmlElement)J2[0]).GetElementsByTagName("color");
+            foreach (XmlElement cor in co2)
+            {
+                Dinamico.colores2.Add(cor.InnerText);
+            }
+            Pruebas(cantidadC, cantidad2C);
+
+            XmlNodeList tablero = xmlDoc.GetElementsByTagName("tablero");
+            foreach (XmlElement fichas in tablero)
+            {
+                XmlNodeList ficha2 = ((XmlElement)fichas).GetElementsByTagName("ficha");
+                foreach (XmlElement noficha in ficha2)
+                {
+                    XmlNodeList co = noficha.GetElementsByTagName("color");
+                    XmlNodeList colu = noficha.GetElementsByTagName("columna");
+                    XmlNodeList fi = noficha.GetElementsByTagName("fila");
+                    columna = colu[0].InnerText.ToLower();
+                    string l = columna + fi[0].InnerText;
+                    cf = co[0].InnerText;
+                    poner(l, cf);
+
+                }
+            }
+            colo = 1;
+            validar2 = 1;
+           
+
+           
+
+
+        }
+
+        public void poner(string id, string color)
+        {
+            foreach (Botones prueba in tablero)
+            {
+                if (prueba.getId().Equals(id))
+                {
+                    if (color == "rojo")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Red;
+                    }
+                    else if (color == "amarillo")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Yellow;
+                    }
+                    else if (color == "azul")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Blue;
+                    }
+                    else if (color == "anaranjado")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Orange;
+                    }
+                    else if (color == "verde")
+                    {
+                        prueba.BackColor = System.Drawing.Color.LightGreen;
+                    }
+                    else if (color == "violeta")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Violet;
+                    }
+                    else if (color == "blanco")
+                    {
+                        prueba.BackColor = System.Drawing.Color.White;
+                    }
+                    else if (color == "negro")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Black;
+                    }
+                    else if (color == "celeste")
+                    {
+                        prueba.BackColor = System.Drawing.Color.LightBlue;
+                    }
+                    else if (color == "gris")
+                    {
+                        prueba.BackColor = System.Drawing.Color.Gray;
+                    }
+                }
+            }
         }
 
 

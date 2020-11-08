@@ -85,7 +85,7 @@ namespace IPC2
 
         protected void Multi_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("Dinamico.aspx");
         }
 
         protected void Unnamed1_Click(object sender, EventArgs e)

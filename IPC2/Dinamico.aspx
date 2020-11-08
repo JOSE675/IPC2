@@ -37,6 +37,9 @@
                 <asp:ListItem Text="Gris" Value="Gray"></asp:ListItem>
 
             </asp:CheckBoxList>
+            <br />
+            <asp:FileUpload ID="carga" runat="server" ForeColor="Yellow" />
+             <asp:Button ID="Button3" runat="server" Text="Cargar Partida" OnClick="Button3_Click" />
             
         </div>
         <div>
